@@ -40,6 +40,7 @@ jobs:
       id: ec2-instance
       uses: aws-actions/aws-cloudformation-github-deploy@master
       with:
-        name: ${{ steps.env-name.outputs.environment }}-ec2
+        # name: ${{ steps.env-name.outputs.environment }}-ec2
+        name: some-random-ec2-replace-me
         template: stacks/1-ec2-with-sg-eip.yaml
         no-fail-on-empty-changeset: "1"
