@@ -27,14 +27,14 @@ jobs:
         aws-region: eu-west-1
         # aws-region: ${{ github.event.inputs.region}}
 
-    # - name: Configure environment name
-    #   id: env-name
-    #   env:
-    #     REPO: ${{ github.repository }}
-    #   run: |
-    #     ENVIRONMENT=`echo $REPO | tr "/" "-"`
-    #     echo "Environment name: $ENVIRONMENT"
-    #     echo "::set-output name=environment::$ENVIRONMENT"
+    - name: Configure environment name
+      id: env-name
+      env:
+        REPO: ${{ github.repository }}
+      run: |
+        ENVIRONMENT=`echo $REPO | tr "/" "-"`
+        echo "Environment name: $ENVIRONMENT"
+        echo "::set-output name=environment::$ENVIRONMENT"
 
     # - name: Deploy Amazon EC2 Instance
     #   id: ec2-instance
