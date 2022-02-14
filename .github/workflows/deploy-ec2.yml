@@ -42,5 +42,6 @@ jobs:
       with:
         # name: ${{ steps.env-name.outputs.environment }}-ec2
         name: some-random-ec2-replace-me
-        template: stacks/1-ec2-with-sg-eip.yaml
+        # template: stacks/1-ec2-with-sg-eip.yaml
+        template: https://test-delete-me-1.s3.amazonaws.com/1-ec2-with-sg-eip.yaml
         no-fail-on-empty-changeset: "1"
