@@ -15,26 +15,16 @@ jobs:
     outputs:
       env-name: ${{ steps.env-name.outputs.environment }}
     steps:
-    - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-    - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-    - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
     - name: Check out repository code
       uses: actions/checkout@v2
-    - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-    - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-    - name: List files in the repository
-      run: |
-          ls ${{ github.workspace }}
-    - run: echo "🍏 This job's status is ${{ job.status }}."
-
+    
     - name: Configure AWS credentials
       id: creds
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1
-        # aws-region: ${{ github.event.inputs.region}}
+        aws-region: ${{ github.event.inputs.region}}
 
     - name: Configure environment name
       id: env-name
@@ -49,8 +39,7 @@ jobs:
       id: ec2-instance
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
-        # name: ${{ steps.env-name.outputs.environment }}-ec2
-        name: some-random-ec2-replace-me
-        # template: stacks/1-ec2-with-sg-eip.yaml
-        template: https://test-delete-me-1.s3.amazonaws.com/1-ec2-with-sg-eip.yaml
+        name: ${{ steps.env-name.outputs.environment }}-ec2
+        template: stacks/1-ec2-with-sg-eip.yaml
+        # template: https://test-delete-me-1.s3.amazonaws.com/1-ec2-with-sg-eip.yaml
         no-fail-on-empty-changeset: "1"
