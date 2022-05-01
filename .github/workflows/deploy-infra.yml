@@ -18,14 +18,16 @@ jobs:
       - uses: actions/checkout@v3
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
+          aws-access-key-id: trewq
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-secret-access-key: trwq
           aws-region: ${{ env.AWS_REGION }}
 
       - id: deploy-vpc
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: ${{ steps.env-name.outputs.environment }}
+          name: Deploy to env ${{ env.ENVIRONMENT }}
           template: stacks/vpc.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
