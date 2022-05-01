@@ -9,6 +9,7 @@ env:
 jobs:
   deploy-vpc:
     name: Deploy VPC
+    environment: development
     runs-on: ubuntu-latest
     outputs:
       env-name: ${{ steps.env-name.outputs.environment }}
