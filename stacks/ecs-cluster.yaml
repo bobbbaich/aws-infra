@@ -11,6 +11,5 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the Fargate containers
-      VpcId:
-        - !ImportValue
-          'Fn::Sub': '${EnvironmentName}-VPC'
+      VpcId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}-VPC'
