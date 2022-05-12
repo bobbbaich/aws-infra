@@ -6,6 +6,7 @@ Parameters:
 Resources:
   # ECS Resources
   ECSCluster:
+    Name: !Sub ${EnvironmentName}-poc-cluster
     Type: AWS::ECS::Cluster
 
 
