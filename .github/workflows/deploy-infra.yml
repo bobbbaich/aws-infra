@@ -64,6 +64,6 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: ${{ env.ENVIRONMENT }}-vpc
-          template: stacks/vpc.yaml
+          template: stacks/ecs-cluster.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
