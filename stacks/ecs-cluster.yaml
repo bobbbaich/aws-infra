@@ -6,8 +6,8 @@ Parameters:
 Resources:
   # ECS Resources
   ECSCluster:
-    Name: !Sub ${EnvironmentName}-poc-cluster
     Type: AWS::ECS::Cluster
+    ClusterName: !Sub ${EnvironmentName}-poc-cluster
 
 
   # A security group for the containers we will run in Fargate.
