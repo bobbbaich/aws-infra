@@ -28,6 +28,7 @@ jobs:
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
   deploy-ecs-roles:
+    needs: deploy-vpc
     name: Deploy ECS Roles
     environment: development
     runs-on: ubuntu-latest
@@ -48,6 +49,7 @@ jobs:
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
   deploy-ecs-cluster:
+    needs: deploy-ecs-roles
     name: Deploy ECS Cluster
     environment: development
     runs-on: ubuntu-latest
