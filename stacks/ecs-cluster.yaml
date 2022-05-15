@@ -8,7 +8,7 @@ Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: !Sub ${EnvironmentName}-poc-cluster
+      ClusterName: !Sub ${EnvironmentName}:poc-cluster
 
 
   # A security group for the containers we will run in Fargate.
@@ -20,3 +20,10 @@ Resources:
       GroupDescription: Access to the Fargate containers
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
+
+Outputs:
+  ContainerSecurityGroup:
+    Description: A reference to Container Security Group
+    Value: !Ref ContainerSecurityGroup
+    Export:
+      Name: !Sub '${EnvironmentName}:ContainerSecurityGroupId'
