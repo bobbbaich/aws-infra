@@ -40,35 +40,6 @@ Resources:
         - !ImportValue
           'Fn::Sub': '${EnvironmentName}:PublicSubnet2'
       SecurityGroups: [ !Ref 'PublicLoadBalancerSG' ]
-  
-  TargetGroupFargateService:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      HealthCheckIntervalSeconds: 6
-      HealthCheckPath: /
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      Port: 80
-      Protocol: HTTP
-      TargetType: ip
-      UnhealthyThresholdCount: 2
-      VpcId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:VpcId'
-
-  ListenerRule:
-    Type: 'AWS::ElasticLoadBalancingV2::ListenerRule'
-    Properties:
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref 'TargetGroupFargateService'
-      Conditions:
-        - Field: path-pattern
-          PathPatternConfig:
-            Values:
-              - /fargate/*
-      ListenerArn: !Ref PublicLoadBalancerListener
-      Priority: 1
 
   PublicLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -103,3 +74,8 @@ Outputs:
     Value: !Ref ContainerSecurityGroup
     Export:
       Name: !Sub ${EnvironmentName}:ContainerSecurityGroup
+  PublicLoadBalancerListener:
+    Description: The Container Security Group ID
+    Value: !Ref PublicLoadBalancerListener
+    Export:
+      Name: !Sub ${EnvironmentName}:PublicLoadBalancerListener
