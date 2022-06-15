@@ -9,6 +9,13 @@ Resources:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: !Sub ${EnvironmentName}-poc-cluster
+
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Access to the ECS hosts that run containers
+      VpcId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:VpcId'
   
   PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
@@ -91,3 +98,8 @@ Outputs:
     Value: !Ref ECSCluster
     Export:
       Name: !Sub ${EnvironmentName}:ECSCluster
+  ContainerSecurityGroup:
+    Description: The Container Security Group ID
+    Value: !Ref ContainerSecurityGroup
+    Export:
+      Name: !Sub ${EnvironmentName}:ContainerSecurityGroup
