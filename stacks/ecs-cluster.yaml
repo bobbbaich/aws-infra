@@ -86,3 +86,8 @@ Outputs:
     Value: !Sub http://${PublicLoadBalancer.DNSName}
     Export:
       Name: !Sub ${EnvironmentName}:ExternalUrl
+  ECSCluster:
+    Description: The ECS Cluster ID
+    Value: !Ref ECSCluster
+    Export:
+      Name: !Sub ${EnvironmentName}:ECSCluster
