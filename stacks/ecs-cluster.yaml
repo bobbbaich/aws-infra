@@ -13,7 +13,7 @@ Resources:
   ContainerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      Name: container-sg
+      GroupName: container-sg
       GroupDescription: Access to the ECS hosts that run containers
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
@@ -28,7 +28,7 @@ Resources:
   PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      Name: public-load-balancer-sg
+      GroupName: public-load-balancer-sg
       GroupDescription: Access to the public facing load balancer
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
