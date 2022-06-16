@@ -10,22 +10,49 @@ Resources:
     Properties:
       ClusterName: !Sub ${EnvironmentName}-poc-cluster
 
-  ContainerSecurityGroup:
+  ContainerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      Name: container-sg
       GroupDescription: Access to the ECS hosts that run containers
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
-  
+
+  ContainerSGALBInboundRule:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !GetAtt ContainerSG.GroupId
+      IpProtocol: TCP
+      SourceSecurityGroupId: !GetAtt PublicLoadBalancerSG.GroupId
+
   PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      Name: public-load-balancer-sg
       GroupDescription: Access to the public facing load balancer
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
-      SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
-          IpProtocol: -1
+
+  PublicLoadBalancerSGInboundRule:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !GetAtt PublicLoadBalancerSG.GroupId
+      IpProtocol: TCP
+      CidrIp: 0.0.0.0/0
+
+  PublicLoadBalancerSGOutboundRuleToContainer:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      GroupId: !GetAtt PublicLoadBalancerSG.GroupId
+      IpProtocol: TCP
+      DestinationSecurityGroupId: !GetAtt ContainerSG.GroupId
+
+  PublicLoadBalancerSGOutboundRuleToPublic:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      GroupId: !GetAtt PublicLoadBalancerSG.GroupId
+      IpProtocol: TCP
+      DestinationSecurityGroupId: !GetAtt ContainerSG.GroupId
 
   PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -52,9 +79,10 @@ Resources:
             Protocol: "#{protocol}"
             Port: "#{port}"
             Host: "#{host}"
-            Path: "/ec2/"
+            Path: "/#{path}"
+            Query: "#{query}"
             StatusCode: "HTTP_301"
-      LoadBalancerArn: !Ref 'PublicLoadBalancer'
+      LoadBalancerArn: !Ref PublicLoadBalancer
       Port: 80
       Protocol: HTTP
 
@@ -69,11 +97,11 @@ Outputs:
     Value: !Ref ECSCluster
     Export:
       Name: !Sub ${EnvironmentName}:ECSCluster
-  ContainerSecurityGroup:
+  ContainerSG:
     Description: The Container Security Group ID
-    Value: !Ref ContainerSecurityGroup
+    Value: !Ref ContainerSG
     Export:
-      Name: !Sub ${EnvironmentName}:ContainerSecurityGroup
+      Name: !Sub ${EnvironmentName}:ContainerSG
   PublicLoadBalancerListener:
     Description: The Container Security Group ID
     Value: !Ref PublicLoadBalancerListener
