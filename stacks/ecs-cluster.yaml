@@ -44,24 +44,6 @@ Resources:
       ToPort: 80
       CidrIp: 0.0.0.0/0
 
-  PublicLoadBalancerSGOutboundRuleToContainer:
-    Type: 'AWS::EC2::SecurityGroupEgress'
-    Properties:
-      GroupId: !GetAtt PublicLoadBalancerSG.GroupId
-      IpProtocol: TCP
-      FromPort: 80
-      ToPort: 80
-      DestinationSecurityGroupId: !GetAtt ContainerSG.GroupId
-
-  PublicLoadBalancerSGOutboundRuleToPublic:
-    Type: 'AWS::EC2::SecurityGroupEgress'
-    Properties:
-      GroupId: !GetAtt PublicLoadBalancerSG.GroupId
-      IpProtocol: TCP
-      FromPort: 80
-      ToPort: 80
-      DestinationSecurityGroupId: !GetAtt ContainerSG.GroupId
-
   PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -87,7 +69,7 @@ Resources:
             Protocol: "#{protocol}"
             Port: "#{port}"
             Host: "#{host}"
-            Path: "/#{path}"
+            Path: "/default/"
             Query: "#{query}"
             StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref PublicLoadBalancer
