@@ -22,7 +22,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       GroupId: !GetAtt ContainerSG.GroupId
-      IpProtocol: HTTP
+      IpProtocol: TCP
       FromPort: 80
       ToPort: 80
       SourceSecurityGroupId: !GetAtt PublicLoadBalancerSG.GroupId
@@ -39,7 +39,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       GroupId: !GetAtt PublicLoadBalancerSG.GroupId
-      IpProtocol: HTTP
+      IpProtocol: TCP
       FromPort: 80
       ToPort: 80
       CidrIp: 0.0.0.0/0
@@ -48,7 +48,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
       GroupId: !GetAtt PublicLoadBalancerSG.GroupId
-      IpProtocol: HTTP
+      IpProtocol: TCP
       FromPort: 80
       ToPort: 80
       DestinationSecurityGroupId: !GetAtt ContainerSG.GroupId
@@ -57,7 +57,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
       GroupId: !GetAtt PublicLoadBalancerSG.GroupId
-      IpProtocol: HTTP
+      IpProtocol: TCP
       FromPort: 80
       ToPort: 80
       DestinationSecurityGroupId: !GetAtt ContainerSG.GroupId
