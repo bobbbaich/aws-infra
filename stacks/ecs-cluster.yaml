@@ -27,6 +27,15 @@ Resources:
       ToPort: 80
       SourceSecurityGroupId: !GetAtt PublicLoadBalancerSG.GroupId
 
+  ContainerSGALBOutboundRule:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      GroupId: !GetAtt ContainerSG.GroupId
+      IpProtocol: TCP
+      FromPort: 443
+      ToPort: 443
+      CidrIp: 0.0.0.0/0
+
   PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
