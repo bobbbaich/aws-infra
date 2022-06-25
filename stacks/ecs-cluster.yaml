@@ -17,24 +17,16 @@ Resources:
       GroupDescription: Access to the ECS hosts that run containers
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
-
-  ContainerSGALBInboundRule:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    Properties:
-      GroupId: !GetAtt ContainerSG.GroupId
-      IpProtocol: TCP
-      FromPort: 80
-      ToPort: 80
-      SourceSecurityGroupId: !GetAtt PublicLoadBalancerSG.GroupId
-
-  ContainerSGALBOutboundRule:
-    Type: 'AWS::EC2::SecurityGroupEgress'
-    Properties:
-      GroupId: !GetAtt ContainerSG.GroupId
-      IpProtocol: TCP
-      FromPort: 443
-      ToPort: 443
-      CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: TCP
+          FromPort: 8080
+          ToPort: 8080
+          SourceSecurityGroupId: !GetAtt PublicLoadBalancerSG.GroupId
+      SecurityGroupEgress:
+        - IpProtocol: TCP
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
 
   PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
@@ -43,15 +35,15 @@ Resources:
       GroupDescription: Access to the public facing load balancer
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
-
-  PublicLoadBalancerSGInboundRule:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    Properties:
-      GroupId: !GetAtt PublicLoadBalancerSG.GroupId
-      IpProtocol: TCP
-      FromPort: 80
-      ToPort: 80
-      CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: TCP
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: TCP
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
 
   PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
