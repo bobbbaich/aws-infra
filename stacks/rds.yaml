@@ -1,0 +1,54 @@
+Description: This template deploys Postgres DB
+
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+    Default: 'development'
+  DBPassword:
+    Description: DB password
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/development/DBPassword'
+
+Resources:
+
+  DatabaseSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: service-to-rds-sg
+      GroupDescription: Open database for access
+      VpcId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:VpcId'
+      SecurityGroupIngress:
+        - IpProtocol: TCP
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:ContainerSG'
+
+  DBVpcSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub '${EnvironmentName}-db-vpc-subnet-group'
+      DBSubnetGroupDescription: DB subnet group to connect in private vpc
+      SubnetIds:
+        - !ImportValue
+          'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
+        - !ImportValue
+          'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
+
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Sub '${EnvironmentName}PocDatabase'
+      Engine: postgres
+      EngineVersion: 14.2
+      MultiAZ: false
+      MasterUsername: 'postgres'
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 20
+      MasterUserPassword:
+        Ref: DBPassword
+      DBSubnetGroupName: !Ref DBVpcSubnetGroup
+      VPCSecurityGroups:
+        - !GetAtt DatabaseSG.GroupId
