@@ -71,7 +71,7 @@ jobs:
 
   deploy-database:
     needs: deploy-ecs-cluster
-    name: Deploy ECS Cluster
+    name: Deploy RDS
     environment: development
     runs-on: ubuntu-latest
     steps:
