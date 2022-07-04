@@ -1,0 +1,22 @@
+Description: This template deploys S3 buckets
+
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+    Default: 'development'
+
+Resources:
+
+  LambdaBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-lambda
+
+Outputs:
+  LambdaBucket:
+    Description: Name of lambda bucket
+    Value: !Ref LambdaBucket
+    Export:
+      Name: !Sub ${EnvironmentName}:LambdaBucket

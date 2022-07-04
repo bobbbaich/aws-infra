@@ -1,0 +1,21 @@
+Transform: AWS::Serverless-2016-10-31
+Description: This template deploys
+
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+    Default: 'development'
+
+Resources:
+
+  DatabaseSetupPG:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: database_setup.lambda_handler
+      Runtime: python3.9
+      CodeUri: !Sub
+        - 's3://${LambdaBucket}/aws-infra/database-setup.zip'
+        - LambdaBucket: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:LambdaBucket'
+      Timeout: 45
