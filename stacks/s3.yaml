@@ -10,10 +10,10 @@ Resources:
 
   LambdaBucket:
     Type: AWS::S3::Bucket
-    AccessControl: Private
     DeletionPolicy: Retain
     Properties:
       BucketName: !Sub ${EnvironmentName}-lambda-${AWS::AccountId}
+      AccessControl: Private
 
 Outputs:
   LambdaBucket:
