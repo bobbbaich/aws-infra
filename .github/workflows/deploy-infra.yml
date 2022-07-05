@@ -68,8 +68,8 @@ jobs:
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
   deploy-s3-lambda:
-    needs: [ deploy-s3 ]
-    name: Build infrastructure lambda function and store in s3 bucket
+    needs: deploy-s3
+    name: Deploy Lambda functions
     environment: development
     runs-on: ubuntu-latest
     steps:
@@ -82,7 +82,7 @@ jobs:
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
-          aws_bucket: ${{ env.ENVIRONMENT }}-lambda-${{ secrets.AWS_ACCOUNT_ID }})
+          aws_bucket: ${{ env.ENVIRONMENT }}-lambda-${{ secrets.AWS_ACCOUNT_ID }}
           destination_dir: 'aws-infra'
           source_dir: 'lambda'
 
