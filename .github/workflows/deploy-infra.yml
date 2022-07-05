@@ -77,14 +77,14 @@ jobs:
       - uses: vimtor/action-zip@v1
         with:
           files: lambda/database-setup/
-          dest: database-setup.zip
+          dest: target/database-setup.zip
       - uses: shallwefootball/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
           aws_bucket: ${{ env.ENVIRONMENT }}-lambda-${{ secrets.AWS_ACCOUNT_ID }}
           destination_dir: 'aws-infra'
-          source_dir: 'lambda'
+          source_dir: 'target'
 
   deploy-ecs-cluster:
     needs: [ deploy-vpc, deploy-ecs-roles, deploy-s3 ]
