@@ -15,7 +15,7 @@ Resources:
       Handler: database_setup.lambda_handler
       Runtime: python3.9
       CodeUri: !Sub
-        Key: '/aws-infra/database-setup.zip'
+        Key: 'aws-infra/database-setup.zip'
         Bucket: !ImportValue
           'Fn::Sub': '${EnvironmentName}:LambdaBucket'
       Timeout: 45
