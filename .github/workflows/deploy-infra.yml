@@ -96,7 +96,7 @@ jobs:
         with:
           name: ${{ env.ENVIRONMENT }}-lambda
           template: stacks/lambda.yaml
-          capabilities: CAPABILITY_AUTO_EXPAND
+          capabilities: CAPABILITY_AUTO_EXPAND # required by lambda
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
