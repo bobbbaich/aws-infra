@@ -16,6 +16,7 @@ Resources:
       Runtime: python3.9
       CodeUri: !Sub
         Key: 'aws-infra/database-setup.zip'
-        Bucket: !ImportValue
-          'Fn::Sub': '${EnvironmentName}:LambdaBucket'
+        Bucket: 'development-lambda-194858711721'
+#        Bucket: !ImportValue
+#          'Fn::Sub': '${EnvironmentName}:LambdaBucket'
       Timeout: 45
