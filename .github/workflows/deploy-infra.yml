@@ -80,7 +80,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-      - id: aws package lambda stack
+      - id: aws-package-lambda-stack
         env:
           LAMBDA_BUCKET_NAME: ${{ env.ENVIRONMENT }}-lambda-${{ steps.configure-aws-credentials.outputs.aws-account-id }}
         run: |
