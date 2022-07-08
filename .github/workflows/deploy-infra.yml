@@ -80,22 +80,21 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-      - uses: vimtor/action-zip@v1
-        with:
-          files: lambda/database-setup/
-          dest: target/database-setup.zip
-      - uses: shallwefootball/s3-upload-action@master
-        with:
-          aws_key_id: ${{ secrets.AWS_ACCESS_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
-          aws_bucket: ${{ env.ENVIRONMENT }}-lambda-${{ steps.configure-aws-credentials.outputs.aws-account-id }}
-          destination_dir: 'aws-infra'
-          source_dir: 'target'
+      - id: aws package lambda stack
+        env:
+          LAMBDA_BUCKET_NAME: ${{ env.ENVIRONMENT }}-lambda-${{ steps.configure-aws-credentials.outputs.aws-account-id }}
+        run: |
+          aws cloudformation package 
+            --template-file /stacks/lambda.yaml 
+            --output-template-file /stacks/lambda.packaged.yaml 
+            --s3-prefix aws-infra/database-setup 
+            --s3-bucket $LAMBDA_BUCKET_NAME
+        shell: bash
       - id: deploy-lambda
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: ${{ env.ENVIRONMENT }}-lambda
-          template: stacks/lambda.yaml
+          template: stacks/lambda.packaged.yaml
           capabilities: CAPABILITY_AUTO_EXPAND # required by lambda
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
