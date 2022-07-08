@@ -84,9 +84,10 @@ jobs:
         env:
           LAMBDA_BUCKET_NAME: ${{ env.ENVIRONMENT }}-lambda-${{ steps.configure-aws-credentials.outputs.aws-account-id }}
         run: |
+          echo "aws cloudformation package"
           aws cloudformation package \
-            --template-file /stacks/lambda.yaml \
-            --output-template-file /stacks/lambda.packaged.yaml \
+            --template-file stacks/lambda.yaml \
+            --output-template-file stacks/lambda.packaged.yaml \
             --s3-prefix aws-infra/database-setup \
             --s3-bucket $LAMBDA_BUCKET_NAME
         shell: bash
