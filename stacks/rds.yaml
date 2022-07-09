@@ -44,11 +44,10 @@ Resources:
       Engine: postgres
       EngineVersion: 14.2
       MultiAZ: false
-      MasterUsername: 'postgres'
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 20
-      MasterUserPassword:
-        Ref: DBPassword
+      MasterUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
       DBSubnetGroupName: !Ref DBVpcSubnetGroup
       VPCSecurityGroups:
         - !GetAtt DatabaseSG.GroupId
