@@ -1,7 +1,8 @@
-import json
+import os
 import sys
 import logging
 import json
+import cfnresponse
 import psycopg2
 
 logger = logging.getLogger()
@@ -11,13 +12,16 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     print(f' start service DB setup event=""{event}""')
-    # rds settings
-    db_host  = event.DBHost
-    db_username = event.DBUsername
-    db_password = event.DBPassword
-    service_db_name = event.ServiceDBName
+    # rds env settings
+    db_host = os.environ['DBHost']
+    db_port = os.environ['DBPort']
+    db_username = os.environ['DBUsername']
+    db_password = os.environ['DBPassword']
 
-    conn = psycopg2.connect(host=db_host, port=5432, dbname='postgres', user=db_username, password=db_password)
+    # rds new db name
+    service_db_name = event.ResourceProperties.ServiceDBName
+
+    conn = psycopg2.connect(host=db_host, port=db_port, dbname='postgres', user=db_username, password=db_password)
     conn.set_session(autocommit=True)
 
     try:
@@ -30,12 +34,15 @@ def lambda_handler(event, context):
         print('Database already exists')
 
       else:
-        cursor.execute(f'CREATE DATABASE ""{database}""')
+        cursor.execute(f'CREATE DATABASE ""{service_db_name}""')
         print('Completed')
 
     finally:
       cursor.close()
       conn.close()
+
+    responseData = {}
+    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, event.LogicalResourceId)
 
     return {
         'statusCode': 200,
