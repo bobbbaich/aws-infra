@@ -55,17 +55,17 @@ Resources:
 
 Outputs:
   DBInstance:
-    Description: The ARN of DB instance
+    Description: The DB instance ID
     Value: !Ref DBInstance
     Export:
       Name: !Sub ${EnvironmentName}:DBInstance
   DBInstanceHost:
-    Description: The ARN of DB instance
+    Description: The DB instance host
     Value: !GetAtt DBInstance.Endpoint.Address
     Export:
       Name: !Sub ${EnvironmentName}:DBInstanceHost
   DBInstancePort:
-    Description: The ARN of DB instance
+    Description: The DB instance port
     Value: !GetAtt DBInstance.Endpoint.Port
     Export:
       Name: !Sub ${EnvironmentName}:DBInstancePort

@@ -20,6 +20,6 @@ Resources:
 Outputs:
   DatabaseSetupPGLambda:
     Description: ARN of PostgreSQL DB setup lambda function
-    Value: !Ref DatabaseSetupPGLambda
+    Value: !!GetAtt DatabaseSetupPGLambda.Arn
     Export:
       Name: !Sub ${EnvironmentName}:DatabaseSetupPGLambda
