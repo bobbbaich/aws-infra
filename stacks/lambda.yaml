@@ -16,6 +16,16 @@ Resources:
       Runtime: python3.9
       CodeUri: ../lambda/database-setup
       Timeout: 45
+      Environment:
+        Variables:
+          Environment: !Ref EnvironmentName
+          DBUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
+          DBPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
+          DBHost: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
+          DBPort: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:DBInstancePort'
+
 
 Outputs:
   DatabaseSetupPGLambda:
