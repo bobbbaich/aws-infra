@@ -9,10 +9,17 @@ Parameters:
 
 Resources:
 
-  DatabaseSetupPG:
+  DatabaseSetupPGLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: database_setup.lambda_handler
       Runtime: python3.9
       CodeUri: ../lambda/database-setup
       Timeout: 45
+
+Outputs:
+  DatabaseSetupPGLambda:
+    Description: ARN of PostgreSQL DB setup lambda function
+    Value: !Ref LambdaBucket
+    Export:
+      Name: !Sub ${EnvironmentName}:DatabaseSetupPGLambda

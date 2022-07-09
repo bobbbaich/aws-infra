@@ -10,11 +10,12 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
+    print(f' start service DB setup event=""{event}""')
     # rds settings
-    db_host  = event.host
-    db_username = event.db_username
-    db_password = event.db_password
-    new_db_name = event.new_db_name
+    db_host  = event.DBHost
+    db_username = event.DBUsername
+    db_password = event.DBPassword
+    service_db_name = event.ServiceDBName
 
     conn = psycopg2.connect(host=db_host, port=5432, dbname='postgres', user=db_username, password=db_password)
     conn.set_session(autocommit=True)
@@ -22,7 +23,7 @@ def lambda_handler(event, context):
     try:
       cursor = conn.cursor()
 
-      cursor.execute(f'SELECT datname FROM pg_database WHERE datname = ""{new_db_name}""')
+      cursor.execute(f'SELECT datname FROM pg_database WHERE datname = ""{service_db_name}""')
       found = cursor.fetchone()
 
       if found is not None:
@@ -38,5 +39,5 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 200,
-        'body': json.dumps(f'DB setup db_name=""{new_db_name}"" has finished successfully ')
+        'body': json.dumps(f'DB setup db_name=""{service_db_name}"" has finished successfully ')
     }
