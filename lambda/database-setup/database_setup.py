@@ -19,7 +19,7 @@ def lambda_handler(event, context):
     db_password = os.environ['DBPassword']
 
     # rds new db name
-    service_db_name = event.ResourceProperties.ServiceDBName
+    service_db_name = event['ResourceProperties']['ServiceDBName']
 
     conn = psycopg2.connect(host=db_host, port=db_port, dbname='postgres', user=db_username, password=db_password)
     conn.set_session(autocommit=True)
