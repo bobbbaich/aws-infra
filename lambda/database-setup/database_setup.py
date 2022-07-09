@@ -11,18 +11,18 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     print(f'start service DB setup event=""{event}""')
-    if 'RequestType' in event and event['RequestType'] is 'Delete' and 'LogicalResourceId' in event:
-        response_data = {'message': 'do not react on cfn delete event'}
-        cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, event['LogicalResourceId'])
-
     # rds env settings
     db_host = os.environ['DBHost']
     db_port = os.environ['DBPort']
     db_username = os.environ['DBUsername']
     db_password = os.environ['DBPassword']
-
     # rds new db name
     service_db_name = event['ResourceProperties']['ServiceDBName']
+
+    if 'RequestType' in event and event['RequestType'] == 'Delete' and 'LogicalResourceId' in event:
+        response_data = {'message': 'do not react on cfn delete event'}
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, event['LogicalResourceId'])
+        return success_response(service_db_name)
 
     conn = psycopg2.connect(host=db_host, port=db_port, dbname='postgres', user=db_username, password=db_password)
     conn.set_session(autocommit=True)
@@ -48,6 +48,10 @@ def lambda_handler(event, context):
         response_data = {'message': 'DB setup finished'}
         cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, event['LogicalResourceId'])
 
+    return success_response(service_db_name)
+
+
+def success_response(service_db_name):
     return {
         'statusCode': 200,
         'body': json.dumps(f'DB setup db_name={service_db_name} has finished successfully ')
