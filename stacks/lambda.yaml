@@ -48,3 +48,9 @@ Outputs:
     Value: !GetAtt DatabaseSetupPGLambda.Arn
     Export:
       Name: !Sub ${EnvironmentName}:DatabaseSetupPGLambda
+
+  DatabaseSetupPGLambdaSG:
+    Description: Database setup PostgreSQL lambda SG
+    Value: !Ref DatabaseSetupPGLambdaSG
+    Export:
+      Name: !Sub ${EnvironmentName}:DatabaseSetupPGLambdaSG
