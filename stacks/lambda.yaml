@@ -24,7 +24,6 @@ Resources:
             'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
           - !ImportValue
             'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
-          - String
       Environment:
         Variables:
           Environment: !Ref EnvironmentName

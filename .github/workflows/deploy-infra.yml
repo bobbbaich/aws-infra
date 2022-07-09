@@ -122,7 +122,7 @@ jobs:
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
   deploy-database:
-    needs: deploy-ecs-cluster
+    needs: [ deploy-ecs-cluster, deploy-s3-lambda ]
     name: Deploy RDS
     environment: development
     runs-on: ubuntu-latest
