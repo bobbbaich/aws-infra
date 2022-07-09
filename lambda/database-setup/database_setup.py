@@ -11,8 +11,8 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     print(f'start service DB setup event=""{event}""')
-    if 'RequestType' in event and event['RequestType'] is not 'Create' and 'LogicalResourceId' in event:
-        response_data = {'message': 'is not create event'}
+    if 'RequestType' in event and event['RequestType'] is 'Delete' and 'LogicalResourceId' in event:
+        response_data = {'message': 'do not react on cfn delete event'}
         cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, event['LogicalResourceId'])
 
     # rds env settings
