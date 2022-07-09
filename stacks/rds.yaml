@@ -52,3 +52,20 @@ Resources:
       DBSubnetGroupName: !Ref DBVpcSubnetGroup
       VPCSecurityGroups:
         - !GetAtt DatabaseSG.GroupId
+
+Outputs:
+  DBInstance:
+    Description: The ARN of DB instance
+    Value: !Ref DBInstance
+    Export:
+      Name: !Sub ${EnvironmentName}:DBInstance
+  DBInstanceHost:
+    Description: The ARN of DB instance
+    Value: !GetAtt DBInstance.Endpoint.Address
+    Export:
+      Name: !Sub ${EnvironmentName}:DBInstanceHost
+  DBInstancePort:
+    Description: The ARN of DB instance
+    Value: !GetAtt DBInstance.Endpoint.Port
+    Export:
+      Name: !Sub ${EnvironmentName}:DBInstancePort
