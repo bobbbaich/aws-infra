@@ -16,6 +16,15 @@ Resources:
       Runtime: python3.9
       CodeUri: ../lambda/database-setup
       Timeout: 45
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref DatabaseSetupPGLambdaSG
+        SubnetIds:
+          - !ImportValue
+            'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
+          - !ImportValue
+            'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
+          - String
       Environment:
         Variables:
           Environment: !Ref EnvironmentName
@@ -26,6 +35,13 @@ Resources:
           DBPort: !ImportValue
             'Fn::Sub': '${EnvironmentName}:DBInstancePort'
 
+  DatabaseSetupPGLambdaSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: database-setup-pg-lambda-sg
+      GroupDescription: Database setup PostgreSQL lambda SG
+      VpcId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:VpcId'
 
 Outputs:
   DatabaseSetupPGLambda:

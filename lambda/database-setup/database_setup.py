@@ -42,7 +42,7 @@ def lambda_handler(event, context):
       conn.close()
 
     responseData = {}
-    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, event.LogicalResourceId)
+    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, event['LogicalResourceId'])
 
     return {
         'statusCode': 200,

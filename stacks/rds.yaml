@@ -11,7 +11,7 @@ Resources:
   DatabaseSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: service-to-rds-sg
+      GroupName: access-rds-sg
       GroupDescription: Open database for access
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
@@ -21,6 +21,11 @@ Resources:
           ToPort: 5432
           SourceSecurityGroupId: !ImportValue
             'Fn::Sub': '${EnvironmentName}:ContainerSG'
+        - IpProtocol: TCP
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:DatabaseSetupPGLambdaSG'
 
   DBVpcSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
