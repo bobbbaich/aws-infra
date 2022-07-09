@@ -68,7 +68,7 @@ jobs:
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
   deploy-s3-lambda:
-    needs: deploy-s3
+    needs: [deploy-vpc, deploy-s3]
     name: Deploy Lambda functions
     environment: development
     runs-on: ubuntu-latest

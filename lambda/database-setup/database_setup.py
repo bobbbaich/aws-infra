@@ -1,7 +1,7 @@
-import os
-import sys
-import logging
 import json
+import logging
+import os
+
 import cfnresponse
 import psycopg2
 
@@ -9,9 +9,12 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-
 def lambda_handler(event, context):
-    print(f' start service DB setup event=""{event}""')
+    print(f'start service DB setup event=""{event}""')
+    if 'RequestType' in event and event['RequestType'] is not 'Create' and 'LogicalResourceId' in event:
+        response_data = {'message': 'is not create event'}
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, event['LogicalResourceId'])
+
     # rds env settings
     db_host = os.environ['DBHost']
     db_port = os.environ['DBPort']
@@ -25,26 +28,27 @@ def lambda_handler(event, context):
     conn.set_session(autocommit=True)
 
     try:
-      cursor = conn.cursor()
+        cursor = conn.cursor()
 
-      cursor.execute(f'SELECT datname FROM pg_database WHERE datname = ""{service_db_name}""')
-      found = cursor.fetchone()
+        cursor.execute(f"SELECT datname FROM pg_database WHERE datname = '{service_db_name}' ")
+        found = cursor.fetchone()
 
-      if found is not None:
-        print('Database already exists')
+        if found is not None:
+            print('Database already exists')
 
-      else:
-        cursor.execute(f'CREATE DATABASE ""{service_db_name}""')
-        print('Completed')
+        else:
+            cursor.execute(f'CREATE DATABASE {service_db_name}')
+            print('Completed DB setup')
 
     finally:
-      cursor.close()
-      conn.close()
+        cursor.close()
+        conn.close()
 
-    responseData = {}
-    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, event['LogicalResourceId'])
+    if 'LogicalResourceId' in event:
+        response_data = {'message': 'DB setup finished'}
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, event['LogicalResourceId'])
 
     return {
         'statusCode': 200,
-        'body': json.dumps(f'DB setup db_name=""{service_db_name}"" has finished successfully ')
+        'body': json.dumps(f'DB setup db_name={service_db_name} has finished successfully ')
     }
