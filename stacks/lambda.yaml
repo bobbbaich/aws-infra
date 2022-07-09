@@ -29,10 +29,11 @@ Resources:
           Environment: !Ref EnvironmentName
           DBUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
           DBPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
-          DBHost: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
-          DBPort: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:DBInstancePort'
+#          TODO: remove circular dependency lambda - rds
+#          DBHost: !ImportValue
+#            'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
+#          DBPort: !ImportValue
+#            'Fn::Sub': '${EnvironmentName}:DBInstancePort'
 
   DatabaseSetupPGLambdaSG:
     Type: AWS::EC2::SecurityGroup
