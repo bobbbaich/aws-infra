@@ -7,8 +7,8 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  deploy-vpc:
-    name: Deploy VPC
+  deploy-infrastructure:
+    name: Deploy infrastructure
     environment: development
     runs-on: ubuntu-latest
     steps:
@@ -19,56 +19,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - id: deploy-vpc
+      - id: deploy-infrastructure
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: ${{ env.ENVIRONMENT }}-vpc
-          template: stacks/vpc.yaml
-          no-fail-on-empty-changeset: "1"
-          parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
-
-  deploy-s3:
-    name: Deploy S3 Buckets
-    environment: development
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - id: deploy-s3
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: ${{ env.ENVIRONMENT }}-s3
-          template: stacks/s3.yaml
-          no-fail-on-empty-changeset: "1"
-          parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
-
-  deploy-ecs-roles:
-    name: Deploy ECS Roles
-    environment: development
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - id: deploy-ecs-roles
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: ${{ env.ENVIRONMENT }}-ecs-roles
-          template: stacks/ecs-roles.yaml
+          name: ${{ env.ENVIRONMENT }}-infrastructure
+          template: stacks/infrastructure.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
   deploy-s3-lambda:
-    needs: [deploy-vpc, deploy-s3]
+    needs: deploy-infrastructure
     name: Deploy Lambda functions
     environment: development
     runs-on: ubuntu-latest
@@ -97,47 +57,5 @@ jobs:
           name: ${{ env.ENVIRONMENT }}-lambda
           template: stacks/lambda.packaged.yaml
           capabilities: 'CAPABILITY_IAM, CAPABILITY_AUTO_EXPAND' # required by lambda
-          no-fail-on-empty-changeset: "1"
-          parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
-
-  deploy-ecs-cluster:
-    needs: [ deploy-vpc, deploy-ecs-roles, deploy-s3 ]
-    name: Deploy ECS Cluster
-    environment: development
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - id: deploy-ecs-cluster
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: ${{ env.ENVIRONMENT }}-poc-cluster
-          template: stacks/ecs-cluster.yaml
-          no-fail-on-empty-changeset: "1"
-          parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
-
-  deploy-database:
-    needs: [ deploy-ecs-cluster, deploy-s3-lambda ]
-    name: Deploy RDS
-    environment: development
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - id: deploy-rds
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: ${{ env.ENVIRONMENT }}-rds
-          template: stacks/rds.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"

@@ -1,10 +1,10 @@
+AWSTemplateFormatVersion: '2010-09-09'
 Description: This template deploys S3 buckets
 
 Parameters:
   EnvironmentName:
     Description: An environment name that is prefixed to resource names
     Type: String
-    Default: 'development'
 
 Resources:
 

@@ -1,10 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
 Description: This template deploys Postgres DB
 
 Parameters:
   EnvironmentName:
     Description: An environment name that is prefixed to resource names
     Type: String
-    Default: 'development'
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  VpcSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
 
 Resources:
 
@@ -13,19 +17,14 @@ Resources:
     Properties:
       GroupName: access-rds-sg
       GroupDescription: Open database for access
-      VpcId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:VpcId'
+      VpcId: !Ref VpcId
 
   DBVpcSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
       DBSubnetGroupName: !Sub '${EnvironmentName}-db-vpc-subnet-group'
       DBSubnetGroupDescription: DB subnet group to connect in private vpc
-      SubnetIds:
-        - !ImportValue
-          'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
-        - !ImportValue
-          'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
+      SubnetIds: !Ref VpcSubnetIds
 
   DBInstance:
     Type: AWS::RDS::DBInstance
@@ -58,3 +57,8 @@ Outputs:
     Value: !GetAtt DBInstance.Endpoint.Port
     Export:
       Name: !Sub ${EnvironmentName}:DBInstancePort
+  DatabaseSG:
+    Description: The DB security group
+    Value: !Ref DatabaseSG
+    Export:
+      Name: !Sub ${EnvironmentName}:DatabaseSG

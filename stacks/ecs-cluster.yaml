@@ -1,9 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: External, public facing load balancer, for forwarding public traffic to containers
+
 Parameters:
   EnvironmentName:
     Type: String
     Default: ecs-course
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+
 Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
@@ -15,8 +19,7 @@ Resources:
     Properties:
       GroupName: container-sg
       GroupDescription: Access to the ECS hosts that run containers
-      VpcId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:VpcId'
+      VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: TCP
           FromPort: 8080
@@ -43,8 +46,7 @@ Resources:
     Properties:
       GroupName: public-load-balancer-sg
       GroupDescription: Access to the public facing load balancer
-      VpcId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:VpcId'
+      VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: TCP
           FromPort: 80
