@@ -28,6 +28,16 @@ Resources:
           ToPort: 443
           CidrIp: 0.0.0.0/0
 
+  ServiceToDatabaseIngressRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: TCP
+      FromPort: 5432
+      ToPort: 5432
+      SourceSecurityGroupId: !Ref ContainerSG
+      GroupId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:DatabaseSG'
+
   PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
     Properties:

@@ -9,7 +9,7 @@ Parameters:
 
 Resources:
 
-  DatabaseSetupPGLambda:
+  SetupDatabaseLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: database_setup.lambda_handler
@@ -18,7 +18,7 @@ Resources:
       Timeout: 45
       VpcConfig:
         SecurityGroupIds:
-          - !Ref DatabaseSetupPGLambdaSG
+          - !Ref SetupDatabaseLambdaSG
         SubnetIds:
           - !ImportValue
             'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
@@ -29,13 +29,12 @@ Resources:
           Environment: !Ref EnvironmentName
           DBUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
           DBPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
-#          TODO: remove circular dependency lambda - rds
-#          DBHost: !ImportValue
-#            'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
-#          DBPort: !ImportValue
-#            'Fn::Sub': '${EnvironmentName}:DBInstancePort'
+          DBHost: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
+          DBPort: !ImportValue
+            'Fn::Sub': '${EnvironmentName}:DBInstancePort'
 
-  DatabaseSetupPGLambdaSG:
+  SetupDatabaseLambdaSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: database-setup-pg-lambda-sg
@@ -43,15 +42,19 @@ Resources:
       VpcId: !ImportValue
         'Fn::Sub': '${EnvironmentName}:VpcId'
 
-Outputs:
-  DatabaseSetupPGLambda:
-    Description: ARN of PostgreSQL DB setup lambda function
-    Value: !GetAtt DatabaseSetupPGLambda.Arn
-    Export:
-      Name: !Sub ${EnvironmentName}:DatabaseSetupPGLambda
+  LambdaToDatabaseIngressRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: TCP
+      FromPort: 5432
+      ToPort: 5432
+      SourceSecurityGroupId: !Ref SetupDatabaseLambdaSG
+      GroupId: !ImportValue
+        'Fn::Sub': '${EnvironmentName}:DatabaseSG'
 
-  DatabaseSetupPGLambdaSG:
-    Description: Database setup PostgreSQL lambda SG
-    Value: !Ref DatabaseSetupPGLambdaSG
+Outputs:
+  SetupDatabaseLambda:
+    Description: ARN of setup database lambda
+    Value: !GetAtt SetupDatabaseLambda.Arn
     Export:
-      Name: !Sub ${EnvironmentName}:DatabaseSetupPGLambdaSG
+      Name: !Sub ${EnvironmentName}:SetupDatabaseLambda
