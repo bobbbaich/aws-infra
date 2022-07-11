@@ -26,15 +26,14 @@ jobs:
           template: stacks/s3.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
-      - name: Print Stack ID
-        run: echo -e "📗 \033[0;32mSuccess!\033[0m"; echo -n "[Stack-ID] "; echo ${{ steps.deploy-s3.outputs.stack-id }}
-        shell: bash
-      - name: set output
-        run: echo "::set-output name=lambda-bucket::${{ steps.deploy-s3.outputs.LambdaBucket }}"
+      - id: setup-output
+        run: | 
+          echo "::set-output name=lambda-bucket::${{ steps.deploy-s3.outputs.LambdaBucket }}"
+          echo "::set-output name=cloudformation-bucket::${{ steps.deploy-s3.outputs.CloudformationBucket }}"
         shell: bash
     outputs:
-      lambda-bucket: ${{ steps.deploy-s3.outputs.lambda-bucket }}
-      cloudformation-bucket: ${{ steps.deploy-s3.outputs.CloudformationBucket }}
+      lambda-bucket: ${{ steps.setup-output.outputs.lambda-bucket }}
+      cloudformation-bucket: ${{ steps.setup-output.outputs.cloudformation-bucket }}
 
   deploy-infrastructure:
     needs:
