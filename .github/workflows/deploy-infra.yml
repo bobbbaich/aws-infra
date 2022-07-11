@@ -19,7 +19,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - id: deploy-s3
+      - id: deploy-s3-=
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: ${{ env.ENVIRONMENT }}-s3
@@ -35,7 +35,6 @@ jobs:
     outputs:
       LAMBDA_BUCKET_NAME: ${{ steps.deploy-s3.outputs.LambdaBucket }}
       CLOUDFORMATION_BUCKET_NAME: ${{ steps.deploy-s3.outputs.CloudformationBucket }}
-      stack-id: ${{ steps.deploy-s3.outputs.stack-id }}
 
   deploy-infrastructure:
     needs:
