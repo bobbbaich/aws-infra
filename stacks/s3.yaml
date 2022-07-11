@@ -15,9 +15,22 @@ Resources:
       BucketName: !Sub ${EnvironmentName}-lambda-${AWS::AccountId}
       AccessControl: Private
 
+  CloudformationBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-cfn-${AWS::AccountId}
+      AccessControl: Private
+
 Outputs:
   LambdaBucket:
     Description: Name of lambda bucket
     Value: !Ref LambdaBucket
     Export:
       Name: !Sub ${EnvironmentName}:LambdaBucket
+
+  CloudformationBucket:
+    Description: Name of cloudformation bucket
+    Value: !Ref CloudformationBucket
+    Export:
+      Name: !Sub ${EnvironmentName}:CloudformationBucket

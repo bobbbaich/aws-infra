@@ -7,6 +7,10 @@ Parameters:
     Default: ecs-course
   VpcId:
     Type: AWS::EC2::VPC::Id
+  LoadBalancerSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+  DBSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
 
 Resources:
   ECSCluster:
@@ -38,8 +42,7 @@ Resources:
       FromPort: 5432
       ToPort: 5432
       SourceSecurityGroupId: !Ref ContainerSG
-      GroupId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:DatabaseSG'
+      GroupId: !Ref DBSecurityGroupId
 
   PublicLoadBalancerSG:
     Type: AWS::EC2::SecurityGroup
@@ -64,12 +67,8 @@ Resources:
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
-      Subnets:
-        - !ImportValue
-          'Fn::Sub': '${EnvironmentName}:PublicSubnet1'
-        - !ImportValue
-          'Fn::Sub': '${EnvironmentName}:PublicSubnet2'
-      SecurityGroups: [ !Ref 'PublicLoadBalancerSG' ]
+      Subnets: !Ref LoadBalancerSubnets
+      SecurityGroups: [ !Ref PublicLoadBalancerSG ]
 
   PublicLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
