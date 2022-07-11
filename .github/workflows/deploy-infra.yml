@@ -20,7 +20,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - id: deploy-s3
-        uses: aws-actions/aws-cloudformation-github-deploy@master
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: ${{ env.ENVIRONMENT }}-s3
           template: stacks/s3.yaml
