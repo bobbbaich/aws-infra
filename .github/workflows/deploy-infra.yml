@@ -29,8 +29,11 @@ jobs:
       - name: Print Stack ID
         run: echo -e "📗 \033[0;32mSuccess!\033[0m"; echo -n "[Stack-ID] "; echo ${{ steps.deploy-s3.outputs.stack-id }}
         shell: bash
+      - name: set output
+        run: echo "::set-output name=lambda-bucket::${{ steps.deploy-s3.outputs.LambdaBucket }}"
+        shell: bash
     outputs:
-      lambda-bucket: ${{ steps.deploy-s3.outputs.LambdaBucket }}
+      lambda-bucket: ${{ steps.deploy-s3.outputs.lambda-bucket }}
       cloudformation-bucket: ${{ steps.deploy-s3.outputs.CloudformationBucket }}
 
   deploy-infrastructure:
