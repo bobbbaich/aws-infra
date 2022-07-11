@@ -35,6 +35,7 @@ jobs:
     outputs:
       LAMBDA_BUCKET_NAME: ${{ steps.deploy-s3.outputs.LambdaBucket }}
       CLOUDFORMATION_BUCKET_NAME: ${{ steps.deploy-s3.outputs.CloudformationBucket }}
+      stack-id: ${{ steps.deploy-s3.outputs.stack-id }}
 
   deploy-infrastructure:
     needs:
