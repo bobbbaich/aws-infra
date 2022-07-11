@@ -26,38 +26,15 @@ jobs:
           template: stacks/s3.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
-      - id: setup-output
-        run: | 
-          echo "::set-output name=lambda-bucket::${{ steps.deploy-s3.outputs.LambdaBucket }}"
-          echo "::set-output name=cloudformation-bucket::${{ steps.deploy-s3.outputs.CloudformationBucket }}"
-        shell: bash
-    outputs:
-      lambda-bucket: ${{ steps.setup-output.outputs.lambda-bucket }}
-      cloudformation-bucket: ${{ steps.setup-output.outputs.cloudformation-bucket }}
 
-  deploy-infrastructure:
-    needs:
-      - deploy-s3
-    name: Deploy infrastructure
-    environment: development
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-      - id: aws-package-lambda-stack
-        env:
-          CLOUDFORMATION_BUCKET_NAME: ${{ needs.deploy-s3.outputs.CLOUDFORMATION_BUCKET_NAME }}
+      - id: aws-cloudformation-stack
         run: |
           echo "aws cloudformation package"
           aws cloudformation package \
             --template-file stacks/infrastructure.yaml \
             --output-template-file stacks/infrastructure.packaged.yaml \
             --s3-prefix aws-infra/stacks \
-            --s3-bucket $CLOUDFORMATION_BUCKET_NAME
+            --s3-bucket ${{ steps.deploy-s3.outputs.CloudformationBucket }}
         shell: bash
 
       - id: deploy-infrastructure
@@ -68,30 +45,14 @@ jobs:
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
-  deploy-lambda:
-    needs:
-      - deploy-infrastructure
-      - deploy-s3
-    name: Deploy Lambda functions
-    environment: development
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
       - id: aws-package-lambda-stack
-        env:
-          LAMBDA_BUCKET_NAME: ${{ needs.deploy-s3.outputs.LAMBDA_BUCKET_NAME }}
         run: |
           echo "aws cloudformation package"
           aws cloudformation package \
             --template-file stacks/lambda.yaml \
             --output-template-file stacks/lambda.packaged.yaml \
             --s3-prefix aws-infra/database-setup \
-            --s3-bucket $LAMBDA_BUCKET_NAME
+            --s3-bucket ${{ steps.deploy-s3.outputs.LambdaBucket }}
         shell: bash
       - id: deploy-lambda
         uses: aws-actions/aws-cloudformation-github-deploy@v1
