@@ -33,8 +33,8 @@ jobs:
           echo "aws cloudformation package to -> $CLOUDFORMATION_BUCKET_NAME"
         shell: bash
     outputs:
-      LAMBDA_BUCKET_NAME: ${{ steps.deploy-s3.outputs.LambdaBucket }}
-      CLOUDFORMATION_BUCKET_NAME: ${{ steps.deploy-s3.outputs.CloudformationBucket }}
+      lambda-bucket: ${{ steps.deploy-s3.outputs.LambdaBucket }}
+      cloudformation-bucket: ${{ steps.deploy-s3.outputs.CloudformationBucket }}
 
   deploy-infrastructure:
     needs:
