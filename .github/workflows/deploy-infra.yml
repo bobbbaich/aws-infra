@@ -58,7 +58,7 @@ jobs:
             --template-file stacks/infrastructure.yaml \
             --output-template-file stacks/infrastructure.packaged.yaml \
             --s3-prefix aws-infra/stacks \
-            --s3-bucket CLOUDFORMATION_BUCKET_NAME
+            --s3-bucket $CLOUDFORMATION_BUCKET_NAME
         shell: bash
 
       - id: deploy-infrastructure
