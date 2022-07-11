@@ -28,7 +28,7 @@ jobs:
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
       - id: aws-package-lambda-stack
         env:
-          CLOUDFORMATION_BUCKET_NAME: ${{ needs.deploy-s3.outputs.CLOUDFORMATION_BUCKET_NAME }}
+          CLOUDFORMATION_BUCKET_NAME: ${{ steps.deploy-s3.outputs.CLOUDFORMATION_BUCKET_NAME }}
         run: |
           echo "aws cloudformation package to -> $CLOUDFORMATION_BUCKET_NAME"
         shell: bash
