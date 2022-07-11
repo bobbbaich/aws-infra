@@ -3,7 +3,6 @@ Description: This template deploys Postgres DB
 
 Parameters:
   EnvironmentName:
-    Description: An environment name that is prefixed to resource names
     Type: String
   VpcId:
     Type: AWS::EC2::VPC::Id

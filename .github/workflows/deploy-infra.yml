@@ -33,7 +33,7 @@ jobs:
             --template-file stacks/infrastructure.yaml \
             --output-template-file stacks/infrastructure.packaged.yaml \
             --s3-prefix aws-infra/stacks \
-            --s3-bucket ${{ steps.deploy-s3.outputs.CloudformationBucket }}
+            --s3-bucket ${{ steps.deploy-s3.outputs.CFNTemplatesBucket }}
         shell: bash
 
       - id: deploy-infrastructure
@@ -50,7 +50,7 @@ jobs:
             --template-file stacks/lambda.yaml \
             --output-template-file stacks/lambda.packaged.yaml \
             --s3-prefix aws-infra/database-setup \
-            --s3-bucket ${{ steps.deploy-s3.outputs.LambdaBucket }}
+            --s3-bucket ${{ steps.deploy-s3.outputs.CFNTemplatesBucket }}
         shell: bash
       - id: deploy-lambda
         uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3

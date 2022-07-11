@@ -8,14 +8,7 @@ Parameters:
 
 Resources:
 
-  LambdaBucket:
-    Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
-    Properties:
-      BucketName: !Sub ${EnvironmentName}-lambda-${AWS::AccountId}
-      AccessControl: Private
-
-  CloudformationBucket:
+  CFNTemplatesBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
@@ -23,14 +16,9 @@ Resources:
       AccessControl: Private
 
 Outputs:
-  LambdaBucket:
-    Description: Name of lambda bucket
-    Value: !Ref LambdaBucket
-    Export:
-      Name: !Sub ${EnvironmentName}:LambdaBucket
 
-  CloudformationBucket:
+  CFNTemplatesBucket:
     Description: Name of cloudformation bucket
-    Value: !Ref CloudformationBucket
+    Value: CFNTemplatesBucket
     Export:
-      Name: !Sub ${EnvironmentName}:CloudformationBucket
+      Name: !Sub ${EnvironmentName}:CFNTemplatesBucket
