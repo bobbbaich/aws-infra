@@ -26,11 +26,8 @@ jobs:
           template: stacks/s3.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
-      - id: aws-package-lambda-stack
-        env:
-          CLOUDFORMATION_BUCKET_NAME: ${{ steps.deploy-s3.outputs.CLOUDFORMATION_BUCKET_NAME }}
-        run: |
-          echo "aws cloudformation package to -> $CLOUDFORMATION_BUCKET_NAME"
+      - name: Print Stack ID
+        run: echo -e "📗 \033[0;32mSuccess!\033[0m"; echo -n "[Stack-ID] "; echo ${{ steps.deploy-s3.outputs.stack-id }}
         shell: bash
     outputs:
       lambda-bucket: ${{ steps.deploy-s3.outputs.LambdaBucket }}
