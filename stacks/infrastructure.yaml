@@ -19,19 +19,8 @@ Resources:
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
-      TemplateURL: ./vpc.yaml
+      TemplateURL: ../stacks/vpc.yaml
       TimeoutInMinutes: !Ref StackTimeout
-
-  #  S3:
-  #    Type: AWS::CloudFormation::Stack
-  #    Properties:
-  #      Parameters:
-  #        EnvironmentName: !Ref EnvironmentName
-  #      Tags:
-  #        - Key: environment
-  #          Value: !Ref EnvironmentName
-  #      TemplateURL: ./s3.yaml
-  #      TimeoutInMinutes: !Ref StackTimeout
 
   ECSRoles:
     Type: AWS::CloudFormation::Stack
@@ -41,7 +30,7 @@ Resources:
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
-      TemplateURL: ./ecs-roles.yaml
+      TemplateURL: ../stacks/ecs-roles.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
   RDS:
@@ -56,29 +45,8 @@ Resources:
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
-      TemplateURL: ./rds.yaml
+      TemplateURL: ../stacks/rds.yaml
       TimeoutInMinutes: !Ref StackTimeout
-
-  #  Lambda:
-  #    Type: AWS::CloudFormation::Stack
-  #    DependsOn:
-  #      - VPC
-  #      - RDS
-  #    Properties:
-  #      Parameters:
-  #        EnvironmentName: !Ref EnvironmentName
-  #        DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
-  #        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
-  #        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
-  #        VpcId: !GetAtt [ VPC, Outputs.DatabaseSG ]
-  #        VpcSubnetIds:
-  #          - !GetAtt [ VPC, Outputs.PrivateSubnet1 ]
-  #          - !GetAtt [ VPC, Outputs.PrivateSubnet2 ]
-  #      Tags:
-  #        - Key: environment
-  #          Value: !Ref EnvironmentName
-  #      TemplateURL: ./lambda.yaml
-  #      TimeoutInMinutes: !Ref StackTimeout
 
   ECSCluster:
     Type: AWS::CloudFormation::Stack
@@ -97,7 +65,7 @@ Resources:
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
-      TemplateURL: ./ecs-cluster.yaml
+      TemplateURL: ../stacks/ecs-cluster.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
 

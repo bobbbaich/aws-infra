@@ -8,7 +8,7 @@ env:
 
 jobs:
   deploy-s3:
-    name: Deploy S3 Buckets
+    name: Deploy Infrastructure
     environment: development
     runs-on: ubuntu-latest
     steps:
@@ -27,9 +27,8 @@ jobs:
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EnvironmentName=${{ env.ENVIRONMENT }}"
 
-      - id: aws-cloudformation-stack
+      - id: aws-package-infrastructure-stack
         run: |
-          echo "aws cloudformation package"
           aws cloudformation package \
             --template-file stacks/infrastructure.yaml \
             --output-template-file stacks/infrastructure.packaged.yaml \
@@ -38,7 +37,7 @@ jobs:
         shell: bash
 
       - id: deploy-infrastructure
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
         with:
           name: ${{ env.ENVIRONMENT }}-infrastructure
           template: stacks/infrastructure.packaged.yaml
@@ -47,7 +46,6 @@ jobs:
 
       - id: aws-package-lambda-stack
         run: |
-          echo "aws cloudformation package"
           aws cloudformation package \
             --template-file stacks/lambda.yaml \
             --output-template-file stacks/lambda.packaged.yaml \
@@ -55,7 +53,7 @@ jobs:
             --s3-bucket ${{ steps.deploy-s3.outputs.LambdaBucket }}
         shell: bash
       - id: deploy-lambda
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
         with:
           name: ${{ env.ENVIRONMENT }}-lambda
           template: stacks/lambda.packaged.yaml
