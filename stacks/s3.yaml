@@ -19,6 +19,6 @@ Outputs:
 
   CFNTemplatesBucket:
     Description: Name of cloudformation bucket
-    Value: CFNTemplatesBucket
+    Value: !Ref CFNTemplatesBucket
     Export:
       Name: !Sub ${EnvironmentName}:CFNTemplatesBucket
