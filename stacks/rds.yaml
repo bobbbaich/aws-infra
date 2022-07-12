@@ -23,7 +23,7 @@ Resources:
     Properties:
       DBSubnetGroupName: !Sub '${EnvironmentName}-db-vpc-subnet-group'
       DBSubnetGroupDescription: DB subnet group to connect in private vpc
-      SubnetIds: !Join [ ',', !Ref VpcPrivateSubnetIds ]
+      SubnetIds: !Join [ ",", !Ref VpcPrivateSubnetIds ]
 
   DBInstance:
     Type: AWS::RDS::DBInstance

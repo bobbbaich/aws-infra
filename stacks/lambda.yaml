@@ -28,7 +28,7 @@ Resources:
       VpcConfig:
         SecurityGroupIds:
           - !Ref SetupDatabaseLambdaSG
-        SubnetIds: !Join [ ',', !Ref VpcPrivateSubnetIds ]
+        SubnetIds: !Join [ ",", !Ref VpcPrivateSubnetIds ]
       Environment:
         Variables:
           Environment: !Ref EnvironmentName
