@@ -6,7 +6,6 @@ Description:  This template deploys a VPC, with a pair of public and private sub
 
 Parameters:
   EnvironmentName:
-    Description: An environment name that is prefixed to resource names
     Type: String
 
   VpcCIDR:

@@ -2,11 +2,9 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
   EnvironmentName:
-    Description: An environment name that is prefixed to resource names
     Type: String
   StackTimeout:
     Default: 10
-    Description: A stack timeout in minutes
     Type: String
 
 Resources:
@@ -47,6 +45,27 @@ Resources:
           Value: !Ref EnvironmentName
       TemplateURL: ../stacks/rds.yaml
       TimeoutInMinutes: !Ref StackTimeout
+  
+  Lambda:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPC
+      - RDS
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
+        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
+        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
+        VpcId: !GetAtt [ VPC, Outputs.DatabaseSG ]
+        VpcPrivateSubnetIds:
+          - !GetAtt [ VPC, Outputs.PrivateSubnet1 ]
+          - !GetAtt [ VPC, Outputs.PrivateSubnet2 ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/lambda.yaml
+      TimeoutInMinutes: !Ref StackTimeout
 
   ECSCluster:
     Type: AWS::CloudFormation::Stack
@@ -59,7 +78,7 @@ Resources:
         EnvironmentName: !Ref EnvironmentName
         VpcId: !Ref VPC
         DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
-        LoadBalancerSubnets:
+        LoadBalancerPublicSubnetIds:
           - !GetAtt [ VPC, Outputs.PublicSubnet1 ]
           - !GetAtt [ VPC, Outputs.PublicSubnet2 ]
       Tags:

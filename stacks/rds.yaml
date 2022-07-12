@@ -6,7 +6,7 @@ Parameters:
     Type: String
   VpcId:
     Type: AWS::EC2::VPC::Id
-  VpcSubnetIds:
+  VpcPrivateSubnetIds:
     Type: List<AWS::EC2::Subnet::Id>
 
 Resources:
@@ -23,7 +23,7 @@ Resources:
     Properties:
       DBSubnetGroupName: !Sub '${EnvironmentName}-db-vpc-subnet-group'
       DBSubnetGroupDescription: DB subnet group to connect in private vpc
-      SubnetIds: !Ref VpcSubnetIds
+      SubnetIds: !Join [ ',', !Ref VpcPrivateSubnetIds ]
 
   DBInstance:
     Type: AWS::RDS::DBInstance

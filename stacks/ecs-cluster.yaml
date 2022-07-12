@@ -4,10 +4,9 @@ Description: External, public facing load balancer, for forwarding public traffi
 Parameters:
   EnvironmentName:
     Type: String
-    Default: ecs-course
   VpcId:
     Type: AWS::EC2::VPC::Id
-  LoadBalancerSubnets:
+  LoadBalancerPublicSubnetIds:
     Type: List<AWS::EC2::Subnet::Id>
   DBSecurityGroupId:
     Type: AWS::EC2::SecurityGroup::Id
@@ -67,7 +66,7 @@ Resources:
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
-      Subnets: !Ref LoadBalancerSubnets
+      Subnets: !Join [ ','  !Ref LoadBalancerPublicSubnetIds ]
       SecurityGroups: [ !Ref PublicLoadBalancerSG ]
 
   PublicLoadBalancerListener:

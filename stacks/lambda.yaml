@@ -4,9 +4,17 @@ Description: This template deploys
 
 Parameters:
   EnvironmentName:
-    Description: An environment name that is prefixed to resource names
     Type: String
-    Default: 'development'
+  DBHost:
+    Type: String
+  DBPort:
+    Type: String
+  DBSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  VpcPrivateSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
 
 Resources:
 
@@ -20,28 +28,21 @@ Resources:
       VpcConfig:
         SecurityGroupIds:
           - !Ref SetupDatabaseLambdaSG
-        SubnetIds:
-          - !ImportValue
-            'Fn::Sub': '${EnvironmentName}:PrivateSubnet1'
-          - !ImportValue
-            'Fn::Sub': '${EnvironmentName}:PrivateSubnet2'
+        SubnetIds: !Join [ ',', !Ref VpcPrivateSubnetIds ]
       Environment:
         Variables:
           Environment: !Ref EnvironmentName
+          DBHost: !Ref DBHost
+          DBPort: !Ref DBPort
           DBUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
           DBPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
-          DBHost: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:DBInstanceHost'
-          DBPort: !ImportValue
-            'Fn::Sub': '${EnvironmentName}:DBInstancePort'
 
   SetupDatabaseLambdaSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: database-setup-pg-lambda-sg
       GroupDescription: Database setup PostgreSQL lambda SG
-      VpcId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:VpcId'
+      VpcId: !Ref VpcId
 
   LambdaToDatabaseIngressRule:
     Type: AWS::EC2::SecurityGroupIngress
@@ -50,8 +51,7 @@ Resources:
       FromPort: 5432
       ToPort: 5432
       SourceSecurityGroupId: !Ref SetupDatabaseLambdaSG
-      GroupId: !ImportValue
-        'Fn::Sub': '${EnvironmentName}:DatabaseSG'
+      GroupId: !Ref DBSecurityGroupId
 
 Outputs:
   SetupDatabaseLambda:
