@@ -197,7 +197,7 @@ Resources:
       SubnetId: !Ref PrivateSubnet2
 
 Outputs:
-  VPC:
+  VpcId:
     Description: A reference to the created VPC
     Value: !Ref VPC
     Export:

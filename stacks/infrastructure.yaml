@@ -37,7 +37,7 @@ Resources:
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
-        VpcId: !Ref VPC
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
         VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
       Tags:
         - Key: environment
@@ -56,7 +56,7 @@ Resources:
         DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
         DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
         DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
-        VpcId: !GetAtt [ VPC, Outputs.DatabaseSG ]
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
         VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
       Tags:
         - Key: environment
@@ -73,7 +73,7 @@ Resources:
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
-        VpcId: !Ref VPC
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
         DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
         LoadBalancerPublicSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PublicSubnet1 ], !GetAtt [ VPC, Outputs.PublicSubnet2 ] ] ]
       Tags:
