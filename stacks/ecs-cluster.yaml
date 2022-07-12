@@ -7,7 +7,7 @@ Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
   LoadBalancerPublicSubnetIds:
-    Type: List<AWS::EC2::Subnet::Id>
+    Type: CommaDelimitedList
   DBSecurityGroupId:
     Type: AWS::EC2::SecurityGroup::Id
 
