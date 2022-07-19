@@ -107,7 +107,7 @@ Outputs:
     Description: The url of the external load balancer
     Value: !Sub http://${PublicLoadBalancer.DNSName}
     Export:
-      Name: !Sub ${EnvironmentName}:ExternalUrl
+      Name: !Sub ${EnvironmentName}:BaseUrl
   ECSCluster:
     Description: The ECS Cluster ID
     Value: !Ref ECSCluster
