@@ -76,6 +76,7 @@ Resources:
         VpcId: !GetAtt [ VPC, Outputs.VpcId ]
         DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
         LoadBalancerPublicSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PublicSubnet1 ], !GetAtt [ VPC, Outputs.PublicSubnet2 ] ] ]
+        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
