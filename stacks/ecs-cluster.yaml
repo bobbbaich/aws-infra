@@ -25,11 +25,6 @@ Resources:
       GroupName: container-sg
       GroupDescription: Access to the ECS hosts that run containers
       VpcId: !Ref VpcId
-      SecurityGroupEgress:
-        - IpProtocol: TCP
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
 
   ServiceToDatabaseIngressRule:
     Type: AWS::EC2::SecurityGroupIngress
@@ -40,7 +35,7 @@ Resources:
       SourceSecurityGroupId: !Ref ContainerSG
       GroupId: !Ref DBSecurityGroupId
 
-  SecurityGroupEgressRule:
+  ServiceToDatabaseEgressRule:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       IpProtocol: TCP
