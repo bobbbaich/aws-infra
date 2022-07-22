@@ -10,7 +10,7 @@ Parameters:
 
 Resources:
 
-  ServiceDiscoveryNamespace:
+  PrivateNamespace:
     Type: AWS::ServiceDiscovery::PrivateDnsNamespace
     Properties:
       Name: !Sub ${EnvironmentName}-services-ns
@@ -20,6 +20,6 @@ Outputs:
 
   DiscoveryServiceId:
     Description: Discovery service id
-    Value: !Ref ServiceDiscoveryNamespace
+    Value: !Ref PrivateNamespace
     Export:
       Name: !Sub ${EnvironmentName}:ServiceDiscoveryNamespaceId
