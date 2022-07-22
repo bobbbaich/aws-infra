@@ -83,4 +83,18 @@ Resources:
       TemplateURL: ../stacks/ecs-cluster.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
+  ServiceDiscovery:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPC
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/service-discovery.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
 

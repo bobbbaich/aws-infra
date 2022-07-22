@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys S3 buckets
+# https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-ecs-service-discovery/
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+
+Resources:
+
+  PrivateNamespace:
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+    Properties:
+      Name: !Sub ${EnvironmentName}-services-ns
+      Vpc: !Ref VpcId
+
+  DiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: !Sub ${EnvironmentName}-application-sd
+      Description: !Sub ${EnvironmentName} Application Discovery Service
+      NamespaceId: !Ref PrivateNamespace
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 60
+            Type: A
+          - TTL: 60
+            Type: SRV
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+Outputs:
+
+  DiscoveryServiceId:
+    Description: Discovery service id
+    Value: !Ref DiscoveryService
+    Export:
+      Name: !Sub ${EnvironmentName}:DiscoveryServiceId
+
+  DiscoveryServiceArn:
+    Description: Discovery service ARN
+    Value: !GetAtt DiscoveryService.Arn
+    Export:
+      Name: !Sub ${EnvironmentName}:DiscoveryServiceArn
