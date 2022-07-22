@@ -10,38 +10,16 @@ Parameters:
 
 Resources:
 
-  PrivateNamespace:
+  ServiceDiscoveryNamespace:
     Type: AWS::ServiceDiscovery::PrivateDnsNamespace
     Properties:
       Name: !Sub ${EnvironmentName}-services-ns
       Vpc: !Ref VpcId
 
-  DiscoveryService:
-    Type: AWS::ServiceDiscovery::Service
-    Properties:
-      Name: !Sub ${EnvironmentName}-application-sd
-      Description: !Sub ${EnvironmentName} Application Discovery Service
-      NamespaceId: !Ref PrivateNamespace
-      DnsConfig:
-        RoutingPolicy: MULTIVALUE
-        DnsRecords:
-          - TTL: 60
-            Type: A
-          - TTL: 60
-            Type: SRV
-      HealthCheckCustomConfig:
-        FailureThreshold: 1
-
 Outputs:
 
   DiscoveryServiceId:
     Description: Discovery service id
-    Value: !Ref DiscoveryService
+    Value: !Ref ServiceDiscoveryNamespace
     Export:
-      Name: !Sub ${EnvironmentName}:DiscoveryServiceId
-
-  DiscoveryServiceArn:
-    Description: Discovery service ARN
-    Value: !GetAtt DiscoveryService.Arn
-    Export:
-      Name: !Sub ${EnvironmentName}:DiscoveryServiceArn
+      Name: !Sub ${EnvironmentName}:ServiceDiscoveryNamespaceId
