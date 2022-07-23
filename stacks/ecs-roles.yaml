@@ -97,6 +97,22 @@ Resources:
                   - 'logs:PutLogEvents'
                 Resource: '*'
 
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ECSTaskRole
+      Description: Allows ECS tasks to call AWS services on your behalf.
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy'
+        - 'arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess'
 Outputs:
   AutoscalingRole:
     Description: A reference to Autoscaling Role
@@ -115,3 +131,9 @@ Outputs:
     Value: !GetAtt ECSTaskExecutionRole.Arn
     Export:
       Name: !Sub '${EnvironmentName}:ECSTaskExecutionRole'
+
+  ECSTaskRole:
+    Description: A reference to ECS Task Role
+    Value: !GetAtt ECSTaskRole.Arn
+    Export:
+      Name: !Sub '${EnvironmentName}:ECSTaskRole'
