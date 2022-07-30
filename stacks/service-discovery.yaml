@@ -18,8 +18,8 @@ Resources:
 
 Outputs:
 
-  DiscoveryServiceId:
-    Description: Discovery service id
+  ServiceDiscoveryId:
+    Description: Service discovery id
     Value: !Ref PrivateNamespace
     Export:
       Name: !Sub ${EnvironmentName}:ServiceDiscoveryNamespaceId
