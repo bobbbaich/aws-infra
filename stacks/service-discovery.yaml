@@ -7,13 +7,16 @@ Parameters:
     Type: String
   VpcId:
     Type: AWS::EC2::VPC::Id
+  ServiceDiscoveryNamespaceName:
+    Default: services-ns
+    Type: String
 
 Resources:
 
   PrivateNamespace:
     Type: AWS::ServiceDiscovery::PrivateDnsNamespace
     Properties:
-      Name: !Sub ${EnvironmentName}-services-ns
+      Name: !Sub ${EnvironmentName}-${ServiceDiscoveryNamespaceName}
       Vpc: !Ref VpcId
 
 Outputs:
@@ -23,3 +26,9 @@ Outputs:
     Value: !Ref PrivateNamespace
     Export:
       Name: !Sub ${EnvironmentName}:ServiceDiscoveryNamespaceId
+
+  ServiceDiscoveryNamespaceName:
+    Description: Service discovery name
+    Value: !Sub ${EnvironmentName}-${ServiceDiscoveryName}
+    Export:
+      Name: !Sub ${EnvironmentName}:ServiceDiscoveryNamespaceName
