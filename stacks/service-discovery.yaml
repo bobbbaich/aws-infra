@@ -29,6 +29,6 @@ Outputs:
 
   ServiceDiscoveryNamespaceName:
     Description: Service discovery name
-    Value: !Sub ${EnvironmentName}-${ServiceDiscoveryName}
+    Value: !Sub ${EnvironmentName}-${ServiceDiscoveryNamespaceName}
     Export:
       Name: !Sub ${EnvironmentName}:ServiceDiscoveryNamespaceName
