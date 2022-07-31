@@ -48,6 +48,8 @@ Resources:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       IpProtocol: TCP
+      FromPort: 0
+      ToPort: 0
       SourceSecurityGroupId: !Ref ContainerSG
       GroupId: !Ref ContainerSG
 

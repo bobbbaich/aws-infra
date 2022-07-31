@@ -1,6 +1,9 @@
 name: Deploy Infrastructure
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - master
 
 env:
   ENVIRONMENT: development
