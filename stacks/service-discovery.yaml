@@ -16,7 +16,7 @@ Resources:
   PrivateNamespace:
     Type: AWS::ServiceDiscovery::PrivateDnsNamespace
     Properties:
-      Name: !Sub ${EnvironmentName}-${ServiceDiscoveryNamespaceName}
+      Name: !Sub ${EnvironmentName}-${ServiceDiscoveryNamespaceName}.com
       Vpc: !Ref VpcId
 
 Outputs:
