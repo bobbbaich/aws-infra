@@ -66,8 +66,8 @@ Resources:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       IpProtocol: TCP
-      FromPort: 8080
-      ToPort: 8080
+      FromPort: 80
+      ToPort: 80
       SourceSecurityGroupId: !GetAtt PublicLoadBalancerSG.GroupId
       GroupId: !GetAtt ContainerSG.GroupId
 
