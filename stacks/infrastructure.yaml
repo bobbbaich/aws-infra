@@ -98,4 +98,17 @@ Resources:
       TemplateURL: ../stacks/service-discovery.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
+  AppMesh:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - ServiceDiscovery
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/app-mesh.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
 
