@@ -7,7 +7,7 @@ Parameters:
 
 Resources:
 
-  App:
+  AppMesh:
     Type: AWS::AppMesh::Mesh
     Properties:
       MeshName: !Sub '${EnvironmentName}-app-mesh'
@@ -16,3 +16,15 @@ Resources:
           Type: ALLOW_ALL
         ServiceDiscovery:
           IpPreference: IPv4_PREFERRED
+
+Outputs:
+  AppMeshArn:
+    Description: The app mesh name
+    Value: !Ref AppMesh
+    Export:
+      Name: !Sub ${EnvironmentName}:AppMeshArn
+  AppMeshName:
+    Description: The app mesh name
+    Value: !GetAtt AppMesh.MeshName
+    Export:
+      Name: !Sub ${EnvironmentName}:AppMeshName
