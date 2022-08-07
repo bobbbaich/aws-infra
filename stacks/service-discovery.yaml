@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This template deploys S3 buckets
+Description: This template deploys Cloud Map service discovery
 # https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-ecs-service-discovery/
 
 Parameters:

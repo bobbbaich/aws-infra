@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys AWS App Mesh
+
+Parameters:
+  EnvironmentName:
+    Type: String
+
+Resources:
+
+  App:
+    Type: AWS::AppMesh::Mesh
+    Properties:
+      MeshName: !Sub '${EnvironmentName}-app-mesh'
+      Spec:
+        EgressFilter:
+          Type: ALLOW_ALL
+        ServiceDiscovery:
+          IpPreference: IPv4_PREFERRED
