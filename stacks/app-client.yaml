@@ -24,10 +24,10 @@ Resources:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
       LoggingConfiguration:
-        DestinationBucketName: !Ref LoggingBucket
+        DestinationBucketName: !Ref ClientAppLogsS3Bucket
         LogFilePrefix: s3-access-logs
       VersioningConfiguration:
-        Status: Enabled
+        Status: Suspended
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -55,11 +55,13 @@ Resources:
 
   # The Amazon S3 bucket into which access logs from S3 (for the application) and CloudFront will be put
   # This bucket is private and only for storing logs
-  LoggingBucket:
+  ClientAppLogsS3Bucket:
     Type: AWS::S3::Bucket
+    DependsOn:
+      - ClientAppS3Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: !Sub 'react-cors-spa-${SimpleAPI}-logs'
+      BucketName: !Sub '${ClientAppS3Bucket}-logs'
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -67,7 +69,7 @@ Resources:
         RestrictPublicBuckets: true
       AccessControl: LogDeliveryWrite
       VersioningConfiguration:
-        Status: Enabled
+        Status: Suspended
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -99,7 +101,7 @@ Resources:
           ViewerProtocolPolicy: redirect-to-https
         PriceClass: PriceClass_All
         Logging:
-          Bucket: !GetAtt LoggingBucket.RegionalDomainName
+          Bucket: !GetAtt ClientAppLogsS3Bucket.RegionalDomainName
           Prefix: 'cloudfront-access-logs'
 
   # The Amazon CloudFront origin access identity
