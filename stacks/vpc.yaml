@@ -201,7 +201,7 @@ Outputs:
     Description: A reference to the created VPC
     Value: !Ref VPC
     Export:
-      Name: !Sub '${EnvironmentName}:VpcId'
+      Name: !Sub ${EnvironmentName}:VpcId
 
   PublicSubnets:
     Description: A list of the public subnets
@@ -215,22 +215,22 @@ Outputs:
     Description: A reference to the public subnet in the 1st Availability Zone
     Value: !Ref PublicSubnet1
     Export:
-      Name: !Sub '${EnvironmentName}:PublicSubnet1'
+      Name: !Sub ${EnvironmentName}:PublicSubnet1
 
   PublicSubnet2:
     Description: A reference to the public subnet in the 2nd Availability Zone
     Value: !Ref PublicSubnet2
     Export:
-      Name: !Sub '${EnvironmentName}:PublicSubnet2'
+      Name: !Sub ${EnvironmentName}:PublicSubnet2
 
   PrivateSubnet1:
     Description: A reference to the private subnet in the 1st Availability Zone
     Value: !Ref PrivateSubnet1
     Export:
-      Name: !Sub '${EnvironmentName}:PrivateSubnet1'
+      Name: !Sub ${EnvironmentName}:PrivateSubnet1
 
   PrivateSubnet2:
     Description: A reference to the private subnet in the 2nd Availability Zone
     Value: !Ref PrivateSubnet2
     Export:
-      Name: !Sub '${EnvironmentName}:PrivateSubnet2'
+      Name: !Sub ${EnvironmentName}:PrivateSubnet2

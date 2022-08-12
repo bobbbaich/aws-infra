@@ -21,21 +21,21 @@ Resources:
   DBVpcSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupName: !Sub '${EnvironmentName}-db-vpc-subnet-group'
+      DBSubnetGroupName: !Sub ${EnvironmentName}-db-vpc-subnet-group
       DBSubnetGroupDescription: DB subnet group to connect in private vpc
       SubnetIds: !Ref VpcPrivateSubnetIds
 
   DBInstance:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBName: !Sub '${EnvironmentName}PocDatabase'
+      DBName: !Sub ${EnvironmentName}PocDatabase
       Engine: postgres
       EngineVersion: 14.2
       MultiAZ: false
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 20
-      MasterUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
-      MasterUserPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
+      MasterUsername: !Sub {{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}
+      MasterUserPassword: !Sub {{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}
       DBSubnetGroupName: !Ref DBVpcSubnetGroup
       VPCSecurityGroups:
         - !GetAtt DatabaseSG.GroupId

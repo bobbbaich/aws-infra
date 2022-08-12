@@ -14,6 +14,49 @@ Resources:
       BucketName: !Sub ${EnvironmentName}-cfn-${AWS::AccountId}
       AccessControl: Private
 
+  # The Amazon S3 bucket into which Client Application build files must be deployed
+  ClientAppS3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-client-app
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LoggingConfiguration:
+        DestinationBucketName: !Ref ClientAppLogsS3Bucket
+        LogFilePrefix: s3-access-logs
+      VersioningConfiguration:
+        Status: Suspended
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'AES256'
+
+  # The Amazon S3 bucket into which access logs from S3 (for the application) and CloudFront will be put
+  # This bucket is private and only for storing logs
+  ClientAppLogsS3Bucket:
+    Type: AWS::S3::Bucket
+    DependsOn:
+      - ClientAppS3Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub ${EnvironmentName}-client-app-logs
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      AccessControl: LogDeliveryWrite
+      VersioningConfiguration:
+        Status: Suspended
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'AES256'
+
 Outputs:
 
   CFNTemplatesBucket:
@@ -21,3 +64,25 @@ Outputs:
     Value: !Ref CFNTemplatesBucket
     Export:
       Name: !Sub ${EnvironmentName}:CFNTemplatesBucket
+
+  ClientAppS3Bucket:
+    Description: Name of client app s3 bucket
+    Value: !Ref ClientAppS3Bucket
+    Export:
+      Name: !Sub ${EnvironmentName}:ClientAppS3Bucket
+  ClientAppS3BucketRegionalDomainName:
+    Description: Name of client app s3 bucket
+    Value: !GetAtt ClientAppS3Bucket.RegionalDomainName
+    Export:
+      Name: !Sub ${EnvironmentName}:ClientAppS3BucketRegionalDomainName
+
+  ClientAppLogsS3Bucket:
+    Description: Name of client app s3 bucket
+    Value: !Ref ClientAppLogsS3Bucket
+    Export:
+      Name: !Sub ${EnvironmentName}:ClientAppLogsS3Bucket
+  ClientAppLogsS3BucketRegionalDomainName:
+    Description: Name of client app s3 bucket
+    Value: !GetAtt ClientAppLogsS3Bucket.RegionalDomainName
+    Export:
+      Name: !Sub ${EnvironmentName}:ClientAppLogsS3BucketRegionalDomainName

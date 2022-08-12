@@ -10,7 +10,7 @@ Resources:
   AppMesh:
     Type: AWS::AppMesh::Mesh
     Properties:
-      MeshName: !Sub '${EnvironmentName}-app-mesh'
+      MeshName: !Sub ${EnvironmentName}-app-mesh
       Spec:
         EgressFilter:
           Type: ALLOW_ALL

@@ -119,22 +119,22 @@ Outputs:
     Description: A reference to Autoscaling Role
     Value: !GetAtt AutoscalingRole.Arn
     Export:
-      Name: !Sub '${EnvironmentName}:AutoscalingRole'
+      Name: !Sub ${EnvironmentName}:AutoscalingRole
 
   ECSRole:
     Description: A reference to ECS Role
     Value: !GetAtt ECSRole.Arn
     Export:
-      Name: !Sub '${EnvironmentName}:ECSRole'
+      Name: !Sub ${EnvironmentName}:ECSRole
 
   ECSTaskExecutionRole:
     Description: A reference to ECS Task Execution Role
     Value: !GetAtt ECSTaskExecutionRole.Arn
     Export:
-      Name: !Sub '${EnvironmentName}:ECSTaskExecutionRole'
+      Name: !Sub ${EnvironmentName}:ECSTaskExecutionRole
 
   ECSTaskRole:
     Description: A reference to ECS Task Role
     Value: !GetAtt ECSTaskRole.Arn
     Export:
-      Name: !Sub '${EnvironmentName}:ECSTaskRole'
+      Name: !Sub ${EnvironmentName}:ECSTaskRole

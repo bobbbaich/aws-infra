@@ -121,7 +121,7 @@ Resources:
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/app-client.yaml
+      TemplateURL: ../stacks/cdn.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
 
