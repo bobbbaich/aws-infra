@@ -111,4 +111,17 @@ Resources:
       TemplateURL: ../stacks/app-mesh.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
+  AppClient:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPC
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/app-client.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
 
