@@ -39,8 +39,6 @@ Resources:
   # This bucket is private and only for storing logs
   ClientAppLogsS3Bucket:
     Type: AWS::S3::Bucket
-    DependsOn:
-      - ClientAppS3Bucket
     DeletionPolicy: Retain
     Properties:
       BucketName: !Sub ${EnvironmentName}-client-app-logs
