@@ -149,3 +149,8 @@ Outputs:
     Value: !Ref ContainerSG
     Export:
       Name: !Sub ${EnvironmentName}:ContainerSG
+  HttpLoadBalancerListener:
+    Description: The http load balancer listener
+    Value: !Ref HttpLoadBalancerListener
+    Export:
+      Name: !Sub ${EnvironmentName}:HttpLoadBalancerListener
