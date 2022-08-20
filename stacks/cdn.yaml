@@ -9,6 +9,8 @@ Description: >
 Parameters:
   EnvironmentName:
     Type: String
+  ALBDNSName:
+    Type: String
 
 Resources:
 
@@ -26,6 +28,11 @@ Resources:
             Id: clientAppS3Origin
             S3OriginConfig:
               OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
+          - DomainName: !Ref ALBDNSName
+            Id: loadBalancerOrigin
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols: TLSv1.2
         Enabled: 'true'
         DefaultRootObject: index.html
         DefaultCacheBehavior:
