@@ -20,104 +20,105 @@ Resources:
           Value: !Ref EnvironmentName
       TemplateURL: ../stacks/vpc.yaml
       TimeoutInMinutes: !Ref StackTimeout
-#
-#  ECSRoles:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/ecs-roles.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
-#
-#  RDS:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn: VPC
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-#        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/rds.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
-#
-#  Lambda:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn:
-#      - VPC
-#      - RDS
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
-#        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
-#        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
-#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-#        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/lambda.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
-#
-#  ECSCluster:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn:
-#      - VPC
-#      - RDS
-#      - ECSRoles
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-#        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
-#        LoadBalancerPublicSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PublicSubnet1 ], !GetAtt [ VPC, Outputs.PublicSubnet2 ] ] ]
-#        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/ecs-cluster.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
-#
-#  ServiceDiscovery:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn:
-#      - VPC
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/service-discovery.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
-#
-#  AppMesh:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn:
-#      - ServiceDiscovery
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/app-mesh.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
 
-  AppClient:
+  ECSRoles:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/ecs-roles.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  RDS:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: VPC
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/rds.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  Lambda:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPC
+      - RDS
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
+        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
+        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/lambda.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  ECSCluster:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPC
+      - RDS
+      - ECSRoles
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
+        LoadBalancerPublicSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PublicSubnet1 ], !GetAtt [ VPC, Outputs.PublicSubnet2 ] ] ]
+        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/ecs-cluster.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  ServiceDiscovery:
     Type: AWS::CloudFormation::Stack
     DependsOn:
       - VPC
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/service-discovery.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  AppMesh:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - ServiceDiscovery
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/app-mesh.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  AppClient:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - ECSCluster
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        ALBDNSName: !GetAtt [ ECSCluster, Outputs.ALBDNSName ]
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName

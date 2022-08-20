@@ -97,7 +97,7 @@ Resources:
       Subnets: !Ref LoadBalancerPublicSubnetIds
       SecurityGroups: [ !Ref PublicLoadBalancerSG ]
 
-  PublicLoadBalancerListener:
+  HttpLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     DependsOn:
       - PublicLoadBalancer
@@ -108,19 +108,37 @@ Resources:
             Protocol: "#{protocol}"
             Port: "#{port}"
             Host: "#{host}"
-            Path: "/default/"
+            Path: "/"
             Query: "#{query}"
             StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref PublicLoadBalancer
       Port: 80
       Protocol: HTTP
 
+  HttpsLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    DependsOn:
+      - PublicLoadBalancer
+    Properties:
+      DefaultActions:
+        - Type: 'redirect'
+          RedirectConfig:
+            Protocol: "#{protocol}"
+            Port: "#{port}"
+            Host: "#{host}"
+            Path: "/"
+            Query: "#{query}"
+            StatusCode: "HTTP_301"
+      LoadBalancerArn: !Ref PublicLoadBalancer
+      Port: 443
+      Protocol: HTTPS
+
 Outputs:
-  ExternalUrl:
+  ALBDNSName:
     Description: The url of the external load balancer
-    Value: !Sub http://${PublicLoadBalancer.DNSName}
+    Value: !GetAtt PublicLoadBalancer.DNSName
     Export:
-      Name: !Sub ${EnvironmentName}:BaseUrl
+      Name: !Sub ${EnvironmentName}:ALBDNSName
   ECSCluster:
     Description: The ECS Cluster ID
     Value: !Ref ECSCluster
@@ -131,8 +149,3 @@ Outputs:
     Value: !Ref ContainerSG
     Export:
       Name: !Sub ${EnvironmentName}:ContainerSG
-  PublicLoadBalancerListener:
-    Description: The Container Security Group ID
-    Value: !Ref PublicLoadBalancerListener
-    Export:
-      Name: !Sub ${EnvironmentName}:PublicLoadBalancerListener
