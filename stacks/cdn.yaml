@@ -34,7 +34,10 @@ Resources:
               OriginProtocolPolicy: https-only
               OriginSSLProtocols:
                 - TLSv1.2
-        Enabled: 'true'
+            OriginCustomHeaders:
+              - HeaderName: X-App-CDN-Only
+                HeaderValue: random-value-1234567890
+        Enabled: true
         DefaultRootObject: index.html
         DefaultCacheBehavior:
           AllowedMethods:
@@ -46,6 +49,8 @@ Resources:
           OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf # CORS-S3Origin
           ViewerProtocolPolicy: redirect-to-https
         PriceClass: PriceClass_100
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: 'true'
         Logging:
           Bucket: !ImportValue
             'Fn::Sub': '${EnvironmentName}:ClientAppLogsS3BucketRegionalDomainName'
