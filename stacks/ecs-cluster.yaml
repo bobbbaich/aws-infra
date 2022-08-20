@@ -115,23 +115,23 @@ Resources:
       Port: 80
       Protocol: HTTP
 
-  HttpsLoadBalancerListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    DependsOn:
-      - PublicLoadBalancer
-    Properties:
-      DefaultActions:
-        - Type: 'redirect'
-          RedirectConfig:
-            Protocol: "#{protocol}"
-            Port: "#{port}"
-            Host: "#{host}"
-            Path: "/"
-            Query: "#{query}"
-            StatusCode: "HTTP_301"
-      LoadBalancerArn: !Ref PublicLoadBalancer
-      Port: 443
-      Protocol: HTTPS
+#  HttpsLoadBalancerListener:
+#    Type: AWS::ElasticLoadBalancingV2::Listener
+#    DependsOn:
+#      - PublicLoadBalancer
+#    Properties:
+#      DefaultActions:
+#        - Type: 'redirect'
+#          RedirectConfig:
+#            Protocol: "#{protocol}"
+#            Port: "#{port}"
+#            Host: "#{host}"
+#            Path: "/"
+#            Query: "#{query}"
+#            StatusCode: "HTTP_301"
+#      LoadBalancerArn: !Ref PublicLoadBalancer
+#      Port: 443
+#      Protocol: TLS
 
 Outputs:
   ALBDNSName:
