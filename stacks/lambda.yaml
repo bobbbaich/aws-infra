@@ -34,8 +34,8 @@ Resources:
           Environment: !Ref EnvironmentName
           DBHost: !Ref DBHost
           DBPort: !Ref DBPort
-          DBUsername: !Sub {{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}
-          DBPassword: !Sub {{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}
+          DBUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
+          DBPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
 
   SetupDatabaseLambdaSG:
     Type: AWS::EC2::SecurityGroup
