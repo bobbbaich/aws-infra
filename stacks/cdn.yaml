@@ -27,8 +27,8 @@ Resources:
         Origins:
           - Id: clientAppS3Origin
             DomainName: !ImportValue
-            S3OriginConfig:
               'Fn::Sub': '${EnvironmentName}:ClientAppS3BucketRegionalDomainName'
+            S3OriginConfig:
               OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
           - Id: loadBalancerOrigin
             DomainName: !Ref ALBDNSName
