@@ -22,35 +22,56 @@ Resources:
       - CFOriginAccessIdentity
     Properties:
       DistributionConfig:
+        Aliases:
+          - cloudbohdan.click
         Origins:
-          - DomainName: !ImportValue
-              'Fn::Sub': '${EnvironmentName}:ClientAppS3BucketRegionalDomainName'
-            Id: clientAppS3Origin
+          - Id: clientAppS3Origin
+            DomainName: !ImportValue
             S3OriginConfig:
+              'Fn::Sub': '${EnvironmentName}:ClientAppS3BucketRegionalDomainName'
               OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CFOriginAccessIdentity}
-          - DomainName: !Ref ALBDNSName
-            Id: loadBalancerOrigin
+          - Id: loadBalancerOrigin
+            DomainName: !Ref ALBDNSName
+            OriginPath: /api/*
             CustomOriginConfig:
-              OriginProtocolPolicy: https-only
+              OriginProtocolPolicy: match-viewer
               OriginSSLProtocols:
                 - TLSv1.2
             OriginCustomHeaders:
               - HeaderName: X-App-CDN-Only
                 HeaderValue: random-value-1234567890
         Enabled: true
+        IPV6Enabled: true
         DefaultRootObject: index.html
+        CacheBehaviors:
+          - TargetOriginId: loadBalancerOrigin
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled
+            OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3 # Managed-AllViewer
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
         DefaultCacheBehavior:
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
           TargetOriginId: clientAppS3Origin
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # CachingOptimized
           OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf # CORS-S3Origin
           ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
         PriceClass: PriceClass_100
         ViewerCertificate:
-          CloudFrontDefaultCertificate: 'true'
+          CloudFrontDefaultCertificate: false
+          # TODO: replace by AWS::CertificateManager::Certificate
+          AcmCertificateArn: arn:aws:acm:us-east-1:194858711721:certificate/916f10f8-25c0-4b81-84dd-3eed94d199f4
+          MinimumProtocolVersion: TLSv1.2_2021
+          SslSupportMethod: sni-only
         Logging:
           Bucket: !ImportValue
             'Fn::Sub': '${EnvironmentName}:ClientAppLogsS3BucketRegionalDomainName'
