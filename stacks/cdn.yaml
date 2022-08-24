@@ -67,7 +67,6 @@ Resources:
             - OPTIONS
         PriceClass: PriceClass_100
         ViewerCertificate:
-          CloudFrontDefaultCertificate: false
           # TODO: replace by AWS::CertificateManager::Certificate
           AcmCertificateArn: arn:aws:acm:us-east-1:194858711721:certificate/916f10f8-25c0-4b81-84dd-3eed94d199f4
           MinimumProtocolVersion: TLSv1.2_2021
