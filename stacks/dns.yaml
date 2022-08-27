@@ -14,7 +14,7 @@ Resources:
     Properties:
       HostedZoneConfig:
         Comment: !Sub Public hosted zone for ${EnvironmentName}.${AppDomainName}
-      Name: !Sub ${EnvironmentName}.${AppDomainName}
+      Name: !Ref AppDomainName
 
 Outputs:
   HostedZoneId:
