@@ -13,7 +13,7 @@ Resources:
     Type: AWS::Route53::HostedZone
     Properties:
       HostedZoneConfig:
-        Comment: !Sub Public hosted zone for ${AppDomainName}
+        Comment: !Sub Public hosted zone for ${EnvironmentName}.${AppDomainName}
       Name: !Sub ${EnvironmentName}.${AppDomainName}
 
 Outputs:

@@ -19,6 +19,8 @@ Resources:
       DomainValidationOptions:
         - DomainName: !Sub ${AppDomainName}
           HostedZoneId: !Ref HostedZoneId
+        - DomainName: !Sub ${EnvironmentName}.${AppDomainName}
+          HostedZoneId: !Ref HostedZoneId
 
 Outputs:
   ApplicationDomainCertificateArn:
