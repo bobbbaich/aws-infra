@@ -14,9 +14,10 @@ Resources:
   ApplicationDomainCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: !Sub '*.${AppDomainName}'
+      DomainName: !Ref AppDomainName
       ValidationMethod: DNS
       SubjectAlternativeNames:
+        - !Sub '*.${AppDomainName}'
         - !Sub ${EnvironmentName}.${AppDomainName}
         - !Sub www.${EnvironmentName}.${AppDomainName}
       DomainValidationOptions:
