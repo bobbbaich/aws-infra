@@ -4,6 +4,8 @@ Description: This template deploys application infrastructure
 Parameters:
   EnvironmentName:
     Type: String
+  AppDomainName:
+    Type: String
   StackTimeout:
     Default: 20
     Type: String
@@ -111,6 +113,18 @@ Resources:
       TemplateURL: ../stacks/app-mesh.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
+  Certificates:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        AppDomainName: !Ref AppDomainName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/acm.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
   AppClient:
     Type: AWS::CloudFormation::Stack
     DependsOn:
@@ -118,6 +132,7 @@ Resources:
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
+        AppDomainName: !Ref AppDomainName
         ALBDNSName: !GetAtt [ ECSCluster, Outputs.ALBDNSName ]
       Tags:
         - Key: environment

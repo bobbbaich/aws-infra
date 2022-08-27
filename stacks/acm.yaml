@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys AWS App Mesh
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  AppDomainName:
+    Type: String
+
+Resources:
+
+  ApplicationDomainCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub ${EnvironmentName}.${AppDomainName}
+      ValidationMethod: DNS
+
+Outputs:
+  ApplicationDomainCertificateArn:
+    Description: The application domain certificate arn
+    Value: !Ref ApplicationDomainCertificate

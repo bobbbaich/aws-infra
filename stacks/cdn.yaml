@@ -9,6 +9,8 @@ Description: >
 Parameters:
   EnvironmentName:
     Type: String
+  AppDomainName:
+    Type: String
   ALBDNSName:
     Type: String
 
@@ -23,7 +25,7 @@ Resources:
     Properties:
       DistributionConfig:
         Aliases:
-          - cloudbohdan.click
+          - !Sub ${EnvironmentName}.${AppDomainName}
         Origins:
           - Id: clientAppS3Origin
             DomainName: !ImportValue
