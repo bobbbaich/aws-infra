@@ -11,22 +11,18 @@ Parameters:
 
 Resources:
 
-  ApplicationDomainCertificate:
+  ApplicationCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
       DomainName: !Ref AppDomainName
       ValidationMethod: DNS
       SubjectAlternativeNames:
         - !Sub '*.${AppDomainName}'
-        - !Sub ${EnvironmentName}.${AppDomainName}
-        - !Sub www.${EnvironmentName}.${AppDomainName}
       DomainValidationOptions:
         - DomainName: !Ref AppDomainName
           HostedZoneId: !Ref HostedZoneId
-        - DomainName: !Sub ${EnvironmentName}.${AppDomainName}
-          HostedZoneId: !Ref HostedZoneId
 
 Outputs:
-  ApplicationDomainCertificateArn:
+  ApplicationCertificateArn:
     Description: The application domain certificate arn
-    Value: !Ref ApplicationDomainCertificate
+    Value: !Ref ApplicationCertificate
