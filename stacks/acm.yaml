@@ -6,6 +6,8 @@ Parameters:
     Type: String
   AppDomainName:
     Type: String
+  HostedZoneId:
+    Type: String
 
 Resources:
 
@@ -14,6 +16,9 @@ Resources:
     Properties:
       DomainName: !Sub ${EnvironmentName}.${AppDomainName}
       ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Sub ${EnvironmentName}.${AppDomainName}
+          HostedZoneId: !Ref HostedZoneId
 
 Outputs:
   ApplicationDomainCertificateArn:

@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys AWS App Mesh
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  AppDomainName:
+    Type: String
+
+Resources:
+
+  PublicHostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      HostedZoneConfig:
+        Comment: !Sub Public hosted zone for ${AppDomainName}
+      Name: !Ref AppDomainName
+
+Outputs:
+  HostedZoneId:
+    Description: The public hosted zone id
+    Value: !Ref PublicHostedZone
