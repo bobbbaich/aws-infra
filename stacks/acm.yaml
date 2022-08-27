@@ -17,7 +17,7 @@ Resources:
       DomainName: !Sub ${EnvironmentName}.${AppDomainName}
       ValidationMethod: DNS
       DomainValidationOptions:
-        - DomainName: !Sub ${EnvironmentName}.${AppDomainName}
+        - DomainName: !Sub ${AppDomainName}
           HostedZoneId: !Ref HostedZoneId
 
 Outputs:
