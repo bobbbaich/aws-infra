@@ -113,48 +113,48 @@ Resources:
       TemplateURL: ../stacks/app-mesh.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
-#  DNS:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        AppDomainName: !Ref AppDomainName
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/dns.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
-#
-#  Certificates:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn:
-#      - DNS
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        AppDomainName: !Ref AppDomainName
-#        HostedZoneId: !GetAtt [ DNS, Outputs.HostedZoneId ]
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/acm.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
-#
-#  AppClient:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn:
-#      - Certificates
-#      - ECSCluster
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        AppDomainName: !Ref AppDomainName
-#        ALBDNSName: !GetAtt [ ECSCluster, Outputs.ALBDNSName ]
-#        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/cdn.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
+  DNS:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        AppDomainName: !Ref AppDomainName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/dns.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  Certificates:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - DNS
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        AppDomainName: !Ref AppDomainName
+        HostedZoneId: !GetAtt [ DNS, Outputs.HostedZoneId ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/acm.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
+  AppClient:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - Certificates
+      - ECSCluster
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        AppDomainName: !Ref AppDomainName
+        ALBDNSName: !GetAtt [ ECSCluster, Outputs.ALBDNSName ]
+        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/cdn.yaml
+      TimeoutInMinutes: !Ref StackTimeout
 
 
