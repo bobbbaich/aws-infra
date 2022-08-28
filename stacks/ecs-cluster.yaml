@@ -99,24 +99,6 @@ Resources:
       Subnets: !Ref LoadBalancerPublicSubnetIds
       SecurityGroups: [ !Ref PublicLoadBalancerSG ]
 
-  HttpLoadBalancerListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    DependsOn:
-      - PublicLoadBalancer
-    Properties:
-      LoadBalancerArn: !Ref PublicLoadBalancer
-      Protocol: HTTP
-      Port: 80
-      DefaultActions:
-        - Type: 'redirect'
-          RedirectConfig:
-            Protocol: https
-            Port: 443
-            Host: "#{host}"
-            Path: "#{path}"
-            Query: "#{query}"
-            StatusCode: "HTTP_301"
-
   HttpsLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     DependsOn:
@@ -153,8 +135,8 @@ Outputs:
     Value: !Ref ContainerSG
     Export:
       Name: !Sub ${EnvironmentName}:ContainerSG
-  HttpLoadBalancerListener:
-    Description: The http load balancer listener
-    Value: !Ref HttpLoadBalancerListener
+  HttpsLoadBalancerListener:
+    Description: The https load balancer listener
+    Value: !Ref HttpsLoadBalancerListener
     Export:
-      Name: !Sub ${EnvironmentName}:HttpLoadBalancerListener
+      Name: !Sub ${EnvironmentName}:HttpsLoadBalancerListener
