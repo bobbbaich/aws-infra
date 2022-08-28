@@ -119,8 +119,8 @@ Resources:
       TTL: 300
       Type: A
       AliasTarget:
-        - DNSName: !GetAtt CFDistribution.DomainName
-          HostedZoneId: !Ref HostedZoneId
+        DNSName: !GetAtt CFDistribution.DomainName
+        HostedZoneId: !Ref HostedZoneId
 
   Route53RecordAAAA:
     Type: AWS::Route53::RecordSet
@@ -130,5 +130,5 @@ Resources:
       TTL: 300
       Type: A
       AliasTarget:
-        - DNSName: !GetAtt CFDistribution.DomainName
-          HostedZoneId: !Ref HostedZoneId
+        DNSName: !GetAtt CFDistribution.DomainName
+        HostedZoneId: !Ref HostedZoneId
