@@ -139,6 +139,7 @@ Resources:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         AppDomainName: !Ref AppDomainName
+        HostedZoneId: !Ref HostedZoneId
         ALBDNSName: !GetAtt [ ECSCluster, Outputs.ALBDNSName ]
         ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
       Tags:
