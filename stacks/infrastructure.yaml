@@ -6,6 +6,8 @@ Parameters:
     Type: String
   AppDomainName:
     Type: String
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
   StackTimeout:
     Default: 20
     Type: String
@@ -113,27 +115,13 @@ Resources:
       TemplateURL: ../stacks/app-mesh.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
-  DNS:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        AppDomainName: !Ref AppDomainName
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/dns.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
   Certificates:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - DNS
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         AppDomainName: !Ref AppDomainName
-        HostedZoneId: !GetAtt [ DNS, Outputs.HostedZoneId ]
+        HostedZoneId: !Ref HostedZoneId
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
