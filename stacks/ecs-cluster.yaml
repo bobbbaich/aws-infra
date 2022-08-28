@@ -12,6 +12,8 @@ Parameters:
     Type: AWS::EC2::SecurityGroup::Id
   DBPort:
     Type: Number
+  ApplicationCertificateArn:
+    Type: String
 
 Resources:
   ECSCluster:
@@ -102,6 +104,29 @@ Resources:
     DependsOn:
       - PublicLoadBalancer
     Properties:
+      LoadBalancerArn: !Ref PublicLoadBalancer
+      Protocol: HTTP
+      Port: 80
+      DefaultActions:
+        - Type: 'redirect'
+          RedirectConfig:
+            Protocol: https
+            Port: 443
+            Host: "#{host}"
+            Path: "#{path}"
+            Query: "#{query}"
+            StatusCode: "HTTP_301"
+
+  HttpsLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    DependsOn:
+      - PublicLoadBalancer
+    Properties:
+      LoadBalancerArn: !Ref PublicLoadBalancer
+      Protocol: TLS
+      Port: 443
+      Certificates:
+        - CertificateArn: !Ref ApplicationCertificateArn
       DefaultActions:
         - Type: 'redirect'
           RedirectConfig:
@@ -111,27 +136,6 @@ Resources:
             Path: "/"
             Query: "#{query}"
             StatusCode: "HTTP_301"
-      LoadBalancerArn: !Ref PublicLoadBalancer
-      Port: 80
-      Protocol: HTTP
-
-#  HttpsLoadBalancerListener:
-#    Type: AWS::ElasticLoadBalancingV2::Listener
-#    DependsOn:
-#      - PublicLoadBalancer
-#    Properties:
-#      DefaultActions:
-#        - Type: 'redirect'
-#          RedirectConfig:
-#            Protocol: "#{protocol}"
-#            Port: "#{port}"
-#            Host: "#{host}"
-#            Path: "/"
-#            Query: "#{query}"
-#            StatusCode: "HTTP_301"
-#      LoadBalancerArn: !Ref PublicLoadBalancer
-#      Port: 443
-#      Protocol: TLS
 
 Outputs:
   ALBDNSName:
