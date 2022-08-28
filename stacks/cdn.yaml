@@ -114,10 +114,9 @@ Resources:
   Route53ecordA:
     Type: AWS::Route53::RecordSet
     Properties:
+      Type: A
       Name: !Sub ${EnvironmentName}.${AppDomainName}
       HostedZoneId: !Ref HostedZoneId
-      TTL: 300
-      Type: A
       AliasTarget:
         DNSName: !GetAtt CFDistribution.DomainName
         HostedZoneId: !Ref HostedZoneId
@@ -125,10 +124,9 @@ Resources:
   Route53RecordAAAA:
     Type: AWS::Route53::RecordSet
     Properties:
+      Type: AAAA
       Name: !Sub ${EnvironmentName}.${AppDomainName}
       HostedZoneId: !Ref HostedZoneId
-      TTL: 300
-      Type: A
       AliasTarget:
         DNSName: !GetAtt CFDistribution.DomainName
         HostedZoneId: !Ref HostedZoneId
