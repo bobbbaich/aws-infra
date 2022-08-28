@@ -15,6 +15,8 @@ Parameters:
     Type: String
   ApplicationCertificateArn:
     Type: String
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
 
 Resources:
 
@@ -108,3 +110,25 @@ Resources:
                 - /*
       Bucket: !ImportValue
         'Fn::Sub': '${EnvironmentName}:ClientAppS3Bucket'
+
+  Route53ecordA:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: !Sub ${EnvironmentName}.${AppDomainName}
+      HostedZoneId: !Ref HostedZoneId
+      TTL: 300
+      Type: A
+      AliasTarget:
+        - DNSName: !GetAtt CFDistribution.DomainName
+          HostedZoneId: !Ref HostedZoneId
+
+  Route53RecordAAAA:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: !Sub ${EnvironmentName}.${AppDomainName}
+      HostedZoneId: !Ref HostedZoneId
+      TTL: 300
+      Type: A
+      AliasTarget:
+        - DNSName: !GetAtt CFDistribution.DomainName
+          HostedZoneId: !Ref HostedZoneId
