@@ -8,7 +8,11 @@ Parameters:
     Type: String
   CognitoDomain:
     Type: String
-    Default: cloudbohdanRand123
+    Default: cloudbohdan
+    MinLength: 3
+    MaxLength: 63
+    AllowedPattern: ^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?$
+    Description: Enter a string. Must be alpha numeric 3-63 in length.
 
 Resources:
   UserPool:
