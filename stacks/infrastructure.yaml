@@ -148,4 +148,15 @@ Resources:
       TemplateURL: ../stacks/cdn.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
+  UserPool:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/cognito-user-pool.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
 
