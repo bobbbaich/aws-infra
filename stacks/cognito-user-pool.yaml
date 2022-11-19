@@ -22,7 +22,7 @@ Resources:
         CaseSensitive: false
       AutoVerifiedAttributes:
         - email
-      UserPoolName: !Sub ${EnvironmentName}-${CognitoDomain}-user-pool
+      UserPoolName: !Sub ${EnvironmentName}-${CognitoApplicationDomainName}-user-pool
       Schema:
         - Name: email
           AttributeDataType: String
@@ -74,5 +74,5 @@ Outputs:
     Export:
       Name: !Sub ${EnvironmentName}:CognitoClientId
   HostedUIURL:
-    Value: !Sub https://${CognitoDomain}.auth.${AWS::Region}.amazoncognito.com/login?client_id=${UserPoolClient}&response_type=code&scope=email+openid+phone+profile&redirect_uri=http://localhost:3000
+    Value: !Sub https://${CognitoApplicationDomainName}.auth.${AWS::Region}.amazoncognito.com/login?client_id=${UserPoolClient}&response_type=code&scope=email+openid+phone+profile&redirect_uri=http://localhost:3000
     Description: The hosted UI URL
