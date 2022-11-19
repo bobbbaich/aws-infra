@@ -6,7 +6,7 @@ Description: This template deploys AWS Cognito User Pool
 Parameters:
   EnvironmentName:
     Type: String
-  CognitoDomain:
+  CognitoApplicationDomainName:
     Type: String
     Default: cloudbohdan
     MinLength: 3
@@ -54,17 +54,25 @@ Resources:
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: !Ref CognitoDomain
+      Domain: !Ref CognitoApplicationDomainName
       UserPoolId: !Ref UserPool
 
-
 Outputs:
-  CognitoUserPoolID:
+  CognitoApplicationDomainName:
+    Value: !Ref CognitoApplicationDomainName
+    Description: The application domain name
+    Export:
+      Name: !Sub ${EnvironmentName}:CognitoApplicationDomainName
+  CognitoUserPoolId:
     Value: !Ref UserPool
-    Description: The UserPool ID
-  CognitoAppClientID:
+    Description: The user pool ID
+    Export:
+      Name: !Sub ${EnvironmentName}:CognitoUserPoolId
+  CognitoClientId:
     Value: !Ref UserPoolClient
-    Description: The app client
+    Description: The app client ID
+    Export:
+      Name: !Sub ${EnvironmentName}:CognitoClientId
   HostedUIURL:
     Value: !Sub https://${CognitoDomain}.auth.${AWS::Region}.amazoncognito.com/login?client_id=${UserPoolClient}&response_type=code&scope=email+openid+phone+profile&redirect_uri=http://localhost:3000
     Description: The hosted UI URL
