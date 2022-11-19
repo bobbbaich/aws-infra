@@ -54,13 +54,13 @@ Resources:
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: !Ref CognitoApplicationDomainName
+      Domain: !Sub ${EnvironmentName}.${CognitoApplicationDomainName}
       UserPoolId: !Ref UserPool
 
 Outputs:
   CognitoApplicationDomainName:
-    Value: !Ref CognitoApplicationDomainName
-    Description: The application domain name
+    Value: !Ref UserPoolDomain
+    Description: The pool application domain name
     Export:
       Name: !Sub ${EnvironmentName}:CognitoApplicationDomainName
   CognitoUserPoolId:
