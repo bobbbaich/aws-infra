@@ -150,6 +150,8 @@ Resources:
 
   UserPool:
     Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - Certificates
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
