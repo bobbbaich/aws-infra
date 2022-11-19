@@ -151,6 +151,7 @@ Resources:
   UserPool:
     Type: AWS::CloudFormation::Stack
     DependsOn:
+      - AppClient
       - Certificates
     Properties:
       Parameters:
