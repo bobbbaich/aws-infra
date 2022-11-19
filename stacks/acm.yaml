@@ -18,6 +18,7 @@ Resources:
       ValidationMethod: DNS
       SubjectAlternativeNames:
         - !Sub '*.${AppDomainName}'
+        - !Sub '*.*.${AppDomainName}'
       DomainValidationOptions:
         - DomainName: !Ref AppDomainName
           HostedZoneId: !Ref HostedZoneId
