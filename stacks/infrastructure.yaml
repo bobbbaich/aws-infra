@@ -148,18 +148,18 @@ Resources:
       TemplateURL: ../stacks/cdn.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
-  UserPool:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - AppClient
-      - Certificates
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        AppDomainName: !Ref AppDomainName
-        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/cognito-user-pool.yaml
-      TimeoutInMinutes: !Ref StackTimeout
+#  UserPool:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn:
+#      - AppClient
+#      - Certificates
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        AppDomainName: !Ref AppDomainName
+#        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/cognito-user-pool.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
