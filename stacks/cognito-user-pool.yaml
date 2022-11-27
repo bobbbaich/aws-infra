@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: This template deploys AWS Cognito User Pool
+Description: This template deploys AWS Cognito user pool
 # https://georgemao.medium.com/amazon-cognito-automation-with-cloudformation-is-kind-of-tricky-heres-a-quick-example-65bdc61d39f7
 
 Parameters:
