@@ -22,6 +22,17 @@ Resources:
         - DomainName: !Ref AppDomainName
           HostedZoneId: !Ref HostedZoneId
 
+  ApplicationCertificatePool:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub '${EnvironmentName}.${AppDomainName}'
+      ValidationMethod: DNS
+      SubjectAlternativeNames:
+        - !Sub '*.${EnvironmentName}.${AppDomainName}'
+      DomainValidationOptions:
+        - DomainName: !Ref AppDomainName
+          HostedZoneId: !Ref HostedZoneId
+
 Outputs:
   ApplicationCertificateArn:
     Description: The application domain certificate arn
