@@ -25,7 +25,7 @@ Resources:
   ApplicationCertificatePool:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: !Sub '${EnvironmentName}.${AppDomainName}'
+      DomainName: !Ref AppDomainName
       ValidationMethod: DNS
       SubjectAlternativeNames:
         - !Sub '*.${EnvironmentName}.${AppDomainName}'
