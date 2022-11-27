@@ -51,10 +51,11 @@ Resources:
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: !Sub auth-${EnvironmentName}.${AppDomainName}
       UserPoolId: !Ref UserPool
-      CustomDomainConfig:
-        CertificateArn: !Ref ApplicationCertificateArn
+      Domain: !Sub
+        - 'auth-${Environment}-${Domain}'
+        - Domain: !Select [ 0, !Split [ ".", !Ref AppDomainName ] ]
+          Environment: !Ref EnvironmentName
 
 Outputs:
   CognitoApplicationDomainName:
