@@ -8,8 +8,6 @@ Parameters:
     Type: String
   AppDomainName:
     Type: String
-  ApplicationCertificateArn:
-    Type: String
 
 Resources:
   UserPool:
@@ -37,9 +35,9 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       CallbackURLs:
         - http://localhost:3000
+        - !Sub https://${EnvironmentName}.${AppDomainName}-user-pool
       AllowedOAuthFlows:
         - code
-        - implicit
       AllowedOAuthScopes:
         - phone
         - email

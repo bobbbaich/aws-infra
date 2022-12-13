@@ -150,14 +150,11 @@ Resources:
 
   CognitoUserPool:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - AppClient
-      - Certificates
+    DeletionPolicy: Retain
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         AppDomainName: !Ref AppDomainName
-        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
