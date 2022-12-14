@@ -35,7 +35,7 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       CallbackURLs:
         - http://localhost:3000
-        - !Sub https://${EnvironmentName}.${AppDomainName}-user-pool
+        - !Sub https://${EnvironmentName}.${AppDomainName}
       AllowedOAuthFlows:
         - code
       AllowedOAuthScopes:

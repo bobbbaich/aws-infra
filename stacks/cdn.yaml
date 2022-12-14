@@ -48,6 +48,10 @@ Resources:
         Enabled: true
         IPV6Enabled: true
         DefaultRootObject: index.html
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 302
+            ResponsePagePath: index.html
         CacheBehaviors:
           - TargetOriginId: loadBalancerOrigin
             PathPattern: /api/*
@@ -73,7 +77,6 @@ Resources:
             - OPTIONS
         PriceClass: PriceClass_100
         ViewerCertificate:
-          # TODO: replace by AWS::CertificateManager::Certificate
           AcmCertificateArn: !Ref ApplicationCertificateArn
           MinimumProtocolVersion: TLSv1.2_2021
           SslSupportMethod: sni-only
