@@ -40,7 +40,6 @@ Resources:
     Type: AWS::CloudFormation::Stack
     DependsOn:
       - VPC
-      - Secrets
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName
@@ -162,14 +161,3 @@ Resources:
           Value: !Ref EnvironmentName
       TemplateURL: ../stacks/user-pool.yaml
       TimeoutInMinutes: !Ref StackTimeout
-
-#  Secrets:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/secrets.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
