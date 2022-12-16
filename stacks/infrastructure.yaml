@@ -38,7 +38,9 @@ Resources:
 
   RDS:
     Type: AWS::CloudFormation::Stack
-    DependsOn: VPC
+    DependsOn:
+      - VPC
+      - Secrets
     Properties:
       Parameters:
         EnvironmentName: !Ref EnvironmentName

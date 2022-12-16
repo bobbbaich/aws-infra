@@ -34,8 +34,8 @@ Resources:
       MultiAZ: false
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 20
-      MasterUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:username}}'
-      MasterUserPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}-DBSecret:SecretString:password}}'
+      MasterUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:password}}'
       DBSubnetGroupName: !Ref DBVpcSubnetGroup
       VPCSecurityGroups:
         - !GetAtt DatabaseSG.GroupId
