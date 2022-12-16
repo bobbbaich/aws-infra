@@ -81,9 +81,8 @@ Outputs:
     Value: !Ref DatabaseSG
     Export:
       Name: !Sub ${EnvironmentName}:DatabaseSG
-  Outputs:
-    RDSSecretsArn:
-      Description: RDS Secrets ARN
-      Value: !Ref RDSSecrets
-      Export:
-        Name: !Sub ${EnvironmentName}:RDSSecrets
+  RDSSecretsArn:
+    Description: RDS Secrets ARN
+    Value: !Ref RDSSecrets
+    Export:
+      Name: !Sub ${EnvironmentName}:RDSSecrets
