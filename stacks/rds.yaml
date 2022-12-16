@@ -34,11 +34,31 @@ Resources:
       MultiAZ: false
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 20
-      MasterUsername: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:username}}'
-      MasterUserPassword: !Sub '{{resolve:secretsmanager:${EnvironmentName}/rds:SecretString:password}}'
+      MasterUsername: !Join [ '', [ '{{resolve:secretsmanager:', !Ref RDSSecrets, ':SecretString:username}}' ] ]
+      MasterUserPassword: !Join [ '', [ '{{resolve:secretsmanager:', !Ref RDSSecrets, ':SecretString:password}}' ] ]
       DBSubnetGroupName: !Ref DBVpcSubnetGroup
       VPCSecurityGroups:
         - !GetAtt DatabaseSG.GroupId
+
+  RDSSecrets:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub ${EnvironmentName}/rds
+      Description: "Access keys to Postgres DB. This secret has a dynamically generated secret password."
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "master"}'
+        GenerateStringKey: "password"
+        PasswordLength: 30
+        ExcludeCharacters: '"@/\'
+
+  #This is a SecretTargetAttachment resource which updates the referenced Secret resource with properties about
+  #the referenced RDS instance
+  SecretRDSInstanceAttachment:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId: !Ref RDSSecrets
+      TargetId: !Ref DBInstance
+      TargetType: AWS::RDS::DBInstance
 
 Outputs:
   DBInstance:
@@ -61,3 +81,9 @@ Outputs:
     Value: !Ref DatabaseSG
     Export:
       Name: !Sub ${EnvironmentName}:DatabaseSG
+  Outputs:
+    RDSSecretsArn:
+      Description: RDS Secrets ARN
+      Value: !Ref RDSSecrets
+      Export:
+        Name: !Sub ${EnvironmentName}:RDSSecrets
