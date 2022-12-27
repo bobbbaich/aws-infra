@@ -62,6 +62,7 @@ Resources:
         DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
         DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
         DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
+        RDSSecretsArn: !GetAtt [ RDS, Outputs.RDSSecretsArn ]
         VpcId: !GetAtt [ VPC, Outputs.VpcId ]
         VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
       Tags:
