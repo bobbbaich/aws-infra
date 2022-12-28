@@ -49,6 +49,6 @@ Outputs:
 
   GiftLifecycleSourceQueueManagedPolicy:
     Description: ARN of gift lifecycle source queue
-    Value: !Ref GiftLifecycleSourceQueue
+    Value: !Ref GiftLifecycleSourceQueueManagedPolicy
     Export:
       Name: !Sub ${EnvironmentName}:GiftLifecycleSourceQueueManagedPolicyArn
