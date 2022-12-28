@@ -114,18 +114,7 @@ Resources:
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy'
         - 'arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess'
-      Policies:
-        - PolicyName: sqs-send-receive-task-policy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'sqs:SendMessage'
-                  - 'sqs:ReceiveMessage'
-                  - 'sqs:DeleteMessage'
-                  - 'sqs:GetQueueAttributes'
-                Resource: "*"
+
 Outputs:
   AutoscalingRole:
     Description: A reference to Autoscaling Role
