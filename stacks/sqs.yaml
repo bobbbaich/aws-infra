@@ -19,10 +19,10 @@ Resources:
     Properties:
       QueueName: !Sub ${EnvironmentName}-gift-lifecycle-dead-letter
 
-  GiftLifecycleSourceQueuePolicy:
-    Type: AWS::IAM::Policy
+  GiftLifecycleSourceQueueManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
     Properties:
-      PolicyName: GiftLifecycleSourceQueuePolicy
+      ManagedPolicyName: GiftLifecycleSourceQueuePolicy
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -46,3 +46,9 @@ Outputs:
     Value: !GetAtt GiftLifecycleSourceQueue.Arn
     Export:
       Name: !Sub ${EnvironmentName}:GiftLifecycleSourceQueueArn
+
+  GiftLifecycleSourceQueueManagedPolicy:
+    Description: ARN of gift lifecycle source queue
+    Value: !Ref GiftLifecycleSourceQueue
+    Export:
+      Name: !Sub ${EnvironmentName}:GiftLifecycleSourceQueueManagedPolicyArn
