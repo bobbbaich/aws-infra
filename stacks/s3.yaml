@@ -11,7 +11,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: !Sub ${EnvironmentName}-cfn-${AWS::AccountId}-{AWS::Region}
+      BucketName: !Sub ${EnvironmentName}-cfn-${AWS::AccountId}
       AccessControl: Private
 
   # The Amazon S3 bucket into which Client Application build files must be deployed
@@ -19,7 +19,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: !Sub ${EnvironmentName}-client-app-${AWS::AccountId}-{AWS::Region}
+      BucketName: !Sub ${EnvironmentName}-client-app-${AWS::AccountId}
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -41,7 +41,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: !Sub ${EnvironmentName}-client-app-logs-${AWS::AccountId}-{AWS::Region}
+      BucketName: !Sub ${EnvironmentName}-client-app-logs-${AWS::AccountId}
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
