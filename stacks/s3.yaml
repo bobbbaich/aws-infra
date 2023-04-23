@@ -41,7 +41,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: !Sub ${EnvironmentName}-client-app-logs
+      BucketName: !Sub ${EnvironmentName}-client-app-logs-${AWS::AccountId}
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
