@@ -14,6 +14,17 @@ Parameters:
 
 Resources:
 
+  CIInit:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/init/ci-iam.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
   VPC:
     Type: AWS::CloudFormation::Stack
     Properties:
