@@ -2,6 +2,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: This template deploys CI user that must be used for CI/CD pipelines.
   First deployment is manual by admin user thru AWS CloudFormation console.
 
+Parameters:
+  EnvironmentName:
+    Type: String
+
 Resources:
   CIUser:
     Type: AWS::IAM::User
@@ -47,12 +51,13 @@ Resources:
 
 Outputs:
   CIUserAccessKeyId:
-    Description: CI User secret access key
+    Description: CI User access key
     Value: !Ref CIUserAccessKey
     Export:
       Name: !Sub ${EnvironmentName}:CIUserAccessKeyId
+
   CIUserAccessKeySecretAccessKey:
-    Description: CI User secret access key
+    Description: CI User secret key
     Value: !GetAtt CIUserAccessKey.SecretAccessKey
     Export:
       Name: !Sub ${EnvironmentName}:CIUserAccessKeySecretAccessKey
