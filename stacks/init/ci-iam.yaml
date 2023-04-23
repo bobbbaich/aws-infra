@@ -40,7 +40,8 @@ Resources:
             {
               "Effect": "Allow",
               "Action": [
-                "cloudformation:*"
+                "cloudformation:*",
+                "s3:*",
               ],
               "Resource": "*"
             }
