@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys CI user that must be used for CI/CD pipelines.
+  First deployment is manual by admin user thru AWS CloudFormation console.
+
+Resources:
+  CIUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: ci-user
+
+  CIUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref CIUser
+
+  CIGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: ci-group
+
+  CIGroupMembership:
+    Type: AWS::IAM::UserToGroupAddition
+    Properties:
+      GroupName: !Ref CIGroup
+      Users:
+        - !Ref CIUser
+
+  CIUserPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "CI User Policy"
+      PolicyDocument:
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudformation:*"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      Groups:
+        - !Ref CIGroup
+
+Outputs:
+  CIUserAccessKeyId:
+    Description: CI User secret access key
+    Value: !Ref CIUserAccessKey
+    Export:
+      Name: !Sub ${EnvironmentName}:CIUserAccessKeyId
+  CIUserAccessKeySecretAccessKey:
+    Description: CI User secret access key
+    Value: !GetAtt CIUserAccessKey.SecretAccessKey
+    Export:
+      Name: !Sub ${EnvironmentName}:CIUserAccessKeySecretAccessKey
