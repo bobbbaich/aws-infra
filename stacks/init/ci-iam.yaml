@@ -42,6 +42,7 @@ Resources:
               "Action": [
                 "cloudformation:*",
                 "s3:*",
+                "route53:*",
               ],
               "Resource": "*"
             }
