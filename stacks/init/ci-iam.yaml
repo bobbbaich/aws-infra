@@ -43,7 +43,7 @@ Resources:
                 "iam:*",
                 "cloudformation:*",
                 "s3:*",
-                "route53:*",
+                "route53:*"
               ],
               "Resource": "*"
             }
