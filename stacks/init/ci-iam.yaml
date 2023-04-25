@@ -17,497 +17,58 @@ Resources:
     Properties:
       UserName: !Ref CIUser
 
-  CIGroup:
+  BasicPermissionsCIGroup:
     Type: AWS::IAM::Group
     Properties:
-      GroupName: ci-group
+      GroupName: ci-group-basic-permissions
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSCloudFormationFullAccess'
+        - 'arn:aws:iam::aws:policy/IAMFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+        - 'arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess'
+        - 'arn:aws:iam::aws:policy/CloudWatchLogsFullAccess'
+        - 'arn:aws:iam::aws:policy/CloudFrontReadOnlyAccess'
 
-  CIGroupMembership:
+  ApplicationPermissionCIGroups:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: ci-group-application
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonECS_FullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess'
+        - 'arn:aws:iam::aws:policy/SecretsManagerReadWrite'
+
+  BasicPermissionsCIGroupMembership:
     Type: AWS::IAM::UserToGroupAddition
     Properties:
-      GroupName: !Ref CIGroup
+      GroupName: !Ref BasicPermissionsCIGroup
       Users:
         - !Ref CIUser
 
-  CIUserPolicy:
+  ApplicationPermissionCIGroupsMembership:
+    Type: AWS::IAM::UserToGroupAddition
+    Properties:
+      GroupName: !Ref ApplicationPermissionCIGroups
+      Users:
+        - !Ref CIUser
+
+  CIUserCustomPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      Description: "CI User Policy"
+      Description: "CI User Custom Policy"
       PolicyDocument:
         {
           "Version": "2012-10-17",
           "Statement": [
-            # IAMFullAccess
             {
-              "Effect": "Allow",
-              "Action": [
-                "iam:*",
-                "organizations:DescribeAccount",
-                "organizations:DescribeOrganization",
-                "organizations:DescribeOrganizationalUnit",
-                "organizations:DescribePolicy",
-                "organizations:ListChildren",
-                "organizations:ListParents",
-                "organizations:ListPoliciesForTarget",
-                "organizations:ListRoots",
-                "organizations:ListPolicies",
-                "organizations:ListTargetsForPolicy"
-              ],
-              "Resource": "*"
-            },
-            # AmazonEC2ContainerRegistryFullAccess
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ecr:*",
-                "cloudtrail:LookupEvents"
-              ],
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "iam:CreateServiceLinkedRole"
-              ],
-              "Resource": "*",
-              "Condition": {
-                "StringEquals": {
-                  "iam:AWSServiceName": [
-                    "replication.ecr.amazonaws.com"
-                  ]
-                }
-              }
-            },
-            # AmazonECS_FullAccess
-            {
-              "Effect": "Allow",
-              "Action": [
-                "application-autoscaling:DeleteScalingPolicy",
-                "application-autoscaling:DeregisterScalableTarget",
-                "application-autoscaling:DescribeScalableTargets",
-                "application-autoscaling:DescribeScalingActivities",
-                "application-autoscaling:DescribeScalingPolicies",
-                "application-autoscaling:PutScalingPolicy",
-                "application-autoscaling:RegisterScalableTarget",
-                "appmesh:DescribeVirtualGateway",
-                "appmesh:DescribeVirtualNode",
-                "appmesh:ListMeshes",
-                "appmesh:ListVirtualGateways",
-                "appmesh:ListVirtualNodes",
-                "autoscaling:CreateAutoScalingGroup",
-                "autoscaling:CreateLaunchConfiguration",
-                "autoscaling:DeleteAutoScalingGroup",
-                "autoscaling:DeleteLaunchConfiguration",
-                "autoscaling:Describe*",
-                "autoscaling:UpdateAutoScalingGroup",
-                "cloudformation:CreateStack",
-                "cloudformation:DeleteStack",
-                "cloudformation:DescribeStack*",
-                "cloudformation:UpdateStack",
-                "cloudwatch:DeleteAlarms",
-                "cloudwatch:DescribeAlarms",
-                "cloudwatch:GetMetricStatistics",
-                "cloudwatch:PutMetricAlarm",
-                "codedeploy:BatchGetApplicationRevisions",
-                "codedeploy:BatchGetApplications",
-                "codedeploy:BatchGetDeploymentGroups",
-                "codedeploy:BatchGetDeployments",
-                "codedeploy:ContinueDeployment",
-                "codedeploy:CreateApplication",
-                "codedeploy:CreateDeployment",
-                "codedeploy:CreateDeploymentGroup",
-                "codedeploy:GetApplication",
-                "codedeploy:GetApplicationRevision",
-                "codedeploy:GetDeployment",
-                "codedeploy:GetDeploymentConfig",
-                "codedeploy:GetDeploymentGroup",
-                "codedeploy:GetDeploymentTarget",
-                "codedeploy:ListApplicationRevisions",
-                "codedeploy:ListApplications",
-                "codedeploy:ListDeploymentConfigs",
-                "codedeploy:ListDeploymentGroups",
-                "codedeploy:ListDeployments",
-                "codedeploy:ListDeploymentTargets",
-                "codedeploy:RegisterApplicationRevision",
-                "codedeploy:StopDeployment",
-                "ec2:AssociateRouteTable",
-                "ec2:AttachInternetGateway",
-                "ec2:AuthorizeSecurityGroupIngress",
-                "ec2:CancelSpotFleetRequests",
-                "ec2:CreateInternetGateway",
-                "ec2:CreateLaunchTemplate",
-                "ec2:CreateRoute",
-                "ec2:CreateRouteTable",
-                "ec2:CreateSecurityGroup",
-                "ec2:CreateSubnet",
-                "ec2:CreateVpc",
-                "ec2:DeleteLaunchTemplate",
-                "ec2:DeleteSubnet",
-                "ec2:DeleteVpc",
-                "ec2:Describe*",
-                "ec2:DetachInternetGateway",
-                "ec2:DisassociateRouteTable",
-                "ec2:ModifySubnetAttribute",
-                "ec2:ModifyVpcAttribute",
-                "ec2:RequestSpotFleet",
-                "ec2:RunInstances",
-                "ecs:*",
-                "elasticfilesystem:DescribeAccessPoints",
-                "elasticfilesystem:DescribeFileSystems",
-                "elasticloadbalancing:CreateListener",
-                "elasticloadbalancing:CreateLoadBalancer",
-                "elasticloadbalancing:CreateRule",
-                "elasticloadbalancing:CreateTargetGroup",
-                "elasticloadbalancing:DeleteListener",
-                "elasticloadbalancing:DeleteLoadBalancer",
-                "elasticloadbalancing:DeleteRule",
-                "elasticloadbalancing:DeleteTargetGroup",
-                "elasticloadbalancing:DescribeListeners",
-                "elasticloadbalancing:DescribeLoadBalancers",
-                "elasticloadbalancing:DescribeRules",
-                "elasticloadbalancing:DescribeTargetGroups",
-                "events:DeleteRule",
-                "events:DescribeRule",
-                "events:ListRuleNamesByTarget",
-                "events:ListTargetsByRule",
-                "events:PutRule",
-                "events:PutTargets",
-                "events:RemoveTargets",
-                "fsx:DescribeFileSystems",
-                "iam:ListAttachedRolePolicies",
-                "iam:ListInstanceProfiles",
-                "iam:ListRoles",
-                "lambda:ListFunctions",
-                "logs:CreateLogGroup",
-                "logs:DescribeLogGroups",
-                "logs:FilterLogEvents",
-                "route53:CreateHostedZone",
-                "route53:DeleteHostedZone",
-                "route53:GetHealthCheck",
-                "route53:GetHostedZone",
-                "route53:ListHostedZonesByName",
-                "servicediscovery:CreatePrivateDnsNamespace",
-                "servicediscovery:CreateService",
-                "servicediscovery:DeleteService",
-                "servicediscovery:GetNamespace",
-                "servicediscovery:GetOperation",
-                "servicediscovery:GetService",
-                "servicediscovery:ListNamespaces",
-                "servicediscovery:ListServices",
-                "servicediscovery:UpdateService",
-                "sns:ListTopics"
-              ],
-              "Resource": [
-                "*"
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ssm:GetParameter",
-                "ssm:GetParameters",
-                "ssm:GetParametersByPath"
-              ],
-              "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ec2:DeleteInternetGateway",
-                "ec2:DeleteRoute",
-                "ec2:DeleteRouteTable",
-                "ec2:DeleteSecurityGroup"
-              ],
-              "Resource": [
-                "*"
-              ],
-              "Condition": {
-                "StringLike": {
-                  "ec2:ResourceTag/aws:cloudformation:stack-name": "EC2ContainerService-*"
-                }
-              }
-            },
-            {
-              "Action": "iam:PassRole",
-              "Effect": "Allow",
-              "Resource": [
-                "*"
-              ],
-              "Condition": {
-                "StringLike": {
-                  "iam:PassedToService": "ecs-tasks.amazonaws.com"
-                }
-              }
-            },
-            {
-              "Action": "iam:PassRole",
-              "Effect": "Allow",
-              "Resource": [
-                "arn:aws:iam::*:role/ecsInstanceRole*"
-              ],
-              "Condition": {
-                "StringLike": {
-                  "iam:PassedToService": [
-                    "ec2.amazonaws.com",
-                    "ec2.amazonaws.com.cn"
-                  ]
-                }
-              }
-            },
-            {
-              "Action": "iam:PassRole",
-              "Effect": "Allow",
-              "Resource": [
-                "arn:aws:iam::*:role/ecsAutoscaleRole*"
-              ],
-              "Condition": {
-                "StringLike": {
-                  "iam:PassedToService": [
-                    "application-autoscaling.amazonaws.com",
-                    "application-autoscaling.amazonaws.com.cn"
-                  ]
-                }
-              }
-            },
-            {
-              "Effect": "Allow",
-              "Action": "iam:CreateServiceLinkedRole",
-              "Resource": "*",
-              "Condition": {
-                "StringLike": {
-                  "iam:AWSServiceName": [
-                    "autoscaling.amazonaws.com",
-                    "ecs.amazonaws.com",
-                    "ecs.application-autoscaling.amazonaws.com",
-                    "spot.amazonaws.com",
-                    "spotfleet.amazonaws.com"
-                  ]
-                }
-              }
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "elasticloadbalancing:AddTags"
-              ],
-              "Resource": "*",
-              "Condition": {
-                "StringEquals": {
-                  "elasticloadbalancing:CreateAction": [
-                    "CreateTargetGroup",
-                    "CreateRule",
-                    "CreateListener",
-                    "CreateLoadBalancer"
-                  ]
-                }
-              }
-            },
-            # AmazonS3FullAccess
-            {
-              "Effect": "Allow",
-              "Action": [
-                "s3:*",
-                "s3-object-lambda:*"
-              ],
-              "Resource": "*"
-            },
-            # AmazonSQSFullAccess
-            {
-              "Action": [
-                "sqs:*"
-              ],
-              "Effect": "Allow",
-              "Resource": "*"
-            },
-            # AWSCloudFormationFullAccess
-            {
-              "Effect": "Allow",
-              "Action": [
-                "cloudformation:*"
-              ],
-              "Resource": "*"
-            },
-            # CloudFrontReadOnlyAccess
-            {
-              "Effect": "Allow",
-              "Action": [
-                "acm:ListCertificates",
-                "cloudfront:DescribeFunction",
-                "cloudfront:Get*",
-                "cloudfront:List*",
-                "iam:ListServerCertificates",
-                "route53:List*",
-                "waf:ListWebACLs",
-                "waf:GetWebACL",
-                "wafv2:ListWebACLs",
-                "wafv2:GetWebACL"
-              ],
-              "Resource": "*"
-            },
-            # CloudWatchLogsFullAccess
-            {
-              "Action": [
-                "logs:*"
-              ],
-              "Effect": "Allow",
-              "Resource": "*"
-            },
-            # ElasticLoadBalancingFullAccess
-            {
-              "Effect": "Allow",
-              "Action": "elasticloadbalancing:*",
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ec2:DescribeAccountAttributes",
-                "ec2:DescribeAddresses",
-                "ec2:DescribeInternetGateways",
-                "ec2:DescribeSecurityGroups",
-                "ec2:DescribeSubnets",
-                "ec2:DescribeVpcs",
-                "ec2:DescribeVpcClassicLink",
-                "ec2:DescribeInstances",
-                "ec2:DescribeNetworkInterfaces",
-                "ec2:DescribeClassicLinkInstances",
-                "ec2:DescribeRouteTables",
-                "ec2:DescribeCoipPools",
-                "ec2:GetCoipPoolUsage",
-                "ec2:DescribeVpcPeeringConnections",
-                "cognito-idp:DescribeUserPoolClient"
-              ],
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": "iam:CreateServiceLinkedRole",
-              "Resource": "*",
-              "Condition": {
-                "StringEquals": {
-                  "iam:AWSServiceName": "elasticloadbalancing.amazonaws.com"
-                }
-              }
-            },
-            {
-              "Effect": "Allow",
-              "Action": "arc-zonal-shift:*",
-              "Resource": "arn:aws:elasticloadbalancing:*:*:loadbalancer/*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "arc-zonal-shift:ListManagedResources",
-                "arc-zonal-shift:ListZonalShifts"
-              ],
-              "Resource": "*"
-            },
-            # AWSLambda_FullAccess
-            {
-              "Effect": "Allow",
-              "Action": [
-                "cloudformation:DescribeStacks",
-                "cloudformation:ListStackResources",
-                "cloudwatch:ListMetrics",
-                "cloudwatch:GetMetricData",
-                "ec2:DescribeSecurityGroups",
-                "ec2:DescribeSubnets",
-                "ec2:DescribeVpcs",
-                "kms:ListAliases",
-                "iam:GetPolicy",
-                "iam:GetPolicyVersion",
-                "iam:GetRole",
-                "iam:GetRolePolicy",
-                "iam:ListAttachedRolePolicies",
-                "iam:ListRolePolicies",
-                "iam:ListRoles",
-                "lambda:*",
-                "logs:DescribeLogGroups",
-                "states:DescribeStateMachine",
-                "states:ListStateMachines",
-                "tag:GetResources",
-                "xray:GetTraceSummaries",
-                "xray:BatchGetTraces"
-              ],
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": "iam:PassRole",
-              "Resource": "*",
-              "Condition": {
-                "StringEquals": {
-                  "iam:PassedToService": "lambda.amazonaws.com"
-                }
-              }
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "logs:DescribeLogStreams",
-                "logs:GetLogEvents",
-                "logs:FilterLogEvents"
-              ],
-              "Resource": "arn:aws:logs:*:*:log-group:/aws/lambda/*"
-            }
-            ,
-            # SecretsManagerReadWrite
-            {
-              "Action": [
-                "secretsmanager:*",
-                "cloudformation:CreateChangeSet",
-                "cloudformation:DescribeChangeSet",
-                "cloudformation:DescribeStackResource",
-                "cloudformation:DescribeStacks",
-                "cloudformation:ExecuteChangeSet",
-                "ec2:DescribeSecurityGroups",
-                "ec2:DescribeSubnets",
-                "ec2:DescribeVpcs",
-                "kms:DescribeKey",
-                "kms:ListAliases",
-                "kms:ListKeys",
-                "lambda:ListFunctions",
-                "rds:DescribeDBClusters",
-                "rds:DescribeDBInstances",
-                "redshift:DescribeClusters",
-                "tag:GetResources"
-              ],
-              "Effect": "Allow",
-              "Resource": "*"
-            },
-            {
-              "Action": [
-                "lambda:AddPermission",
-                "lambda:CreateFunction",
-                "lambda:GetFunction",
-                "lambda:InvokeFunction",
-                "lambda:UpdateFunctionConfiguration"
-              ],
-              "Effect": "Allow",
-              "Resource": "arn:aws:lambda:*:*:function:SecretsManager*"
-            },
-            {
-              "Action": [
-                "serverlessrepo:CreateCloudFormationChangeSet",
-                "serverlessrepo:GetApplication"
-              ],
-              "Effect": "Allow",
-              "Resource": "arn:aws:serverlessrepo:*:*:applications/SecretsManager*"
-            },
-            {
-              "Action": [
-                "s3:GetObject"
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                "arn:aws:s3:::awsserverlessrepo-changesets*",
-                "arn:aws:s3:::secrets-manager-rotation-apps-*/*"
-              ]
+              "Action": "sts:AssumeRole",
+              "Resource": !GetAtt CIUser.Arn,
+              "Effect": "Allow"
             }
           ]
         }
       Groups:
-        - !Ref CIGroup
+        - !Ref BasicPermissionsCIGroup
 
 Outputs:
   CIUserAccessKeyId:
