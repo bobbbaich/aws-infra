@@ -22,12 +22,15 @@ Resources:
     Properties:
       GroupName: ci-group-basic-permissions
       ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/AWSCloudFormationFullAccess'
         - 'arn:aws:iam::aws:policy/IAMFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonEC2FullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonRoute53FullAccess'
         - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
-        - 'arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess'
-        - 'arn:aws:iam::aws:policy/CloudWatchLogsFullAccess'
-        - 'arn:aws:iam::aws:policy/CloudFrontReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess'
+        - 'arn:aws:iam::aws:policy/AWSCloudFormationFullAccess'
+        - 'arn:aws:iam::aws:policy/CloudFrontFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/SecretsManagerReadWrite'
 
   ApplicationPermissionCIGroups:
     Type: AWS::IAM::Group
@@ -35,8 +38,11 @@ Resources:
       GroupName: ci-group-application
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/AmazonECS_FullAccess'
-        - 'arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess'
-        - 'arn:aws:iam::aws:policy/SecretsManagerReadWrite'
+        - 'arn:aws:iam::aws:policy/AmazonESCognitoAccess'
+        - 'arn:aws:iam::aws:policy/AmazonRDSFullAccess'
+        - 'arn:aws:iam::aws:policy/AWSAppMeshFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonSQSFullAccess'
+        - 'arn:aws:iam::aws:policy/AWSCloudMapFullAccess'
 
   BasicPermissionsCIGroupMembership:
     Type: AWS::IAM::UserToGroupAddition
@@ -52,23 +58,148 @@ Resources:
       Users:
         - !Ref CIUser
 
-  CIUserCustomPolicy:
+  CognitoUserPoolFullAccess:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      Description: "CI User Custom Policy"
+      Description: "Cognito user pool full access custom policy"
       PolicyDocument:
         {
           "Version": "2012-10-17",
           "Statement": [
             {
-              "Action": "sts:AssumeRole",
-              "Resource": !GetAtt CIUser.Arn,
-              "Effect": "Allow"
+              "Sid": "VisualEditor0",
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:ForgotPassword",
+                "cognito-idp:GlobalSignOut",
+                "cognito-idp:ConfirmSignUp",
+                "cognito-idp:CreateUserPool",
+                "cognito-idp:ForgetDevice",
+                "cognito-idp:RevokeToken",
+                "cognito-idp:GetUserAttributeVerificationCode",
+                "cognito-idp:InitiateAuth",
+                "cognito-idp:DeleteUser",
+                "cognito-idp:SetUserMFAPreference",
+                "cognito-idp:GetUser",
+                "cognito-idp:ConfirmForgotPassword",
+                "cognito-idp:SetUserSettings",
+                "cognito-idp:SignUp",
+                "cognito-idp:VerifyUserAttribute",
+                "cognito-idp:ListDevices",
+                "cognito-idp:ListUserPools",
+                "cognito-idp:AssociateSoftwareToken",
+                "cognito-idp:VerifySoftwareToken",
+                "cognito-idp:GetDevice",
+                "cognito-idp:RespondToAuthChallenge",
+                "cognito-idp:DeleteUserAttributes",
+                "cognito-idp:UpdateUserAttributes",
+                "cognito-idp:DescribeUserPoolDomain",
+                "cognito-idp:UpdateDeviceStatus",
+                "cognito-idp:ChangePassword",
+                "cognito-idp:ConfirmDevice",
+                "cognito-idp:ResendConfirmationCode"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Sid": "VisualEditor1",
+              "Effect": "Allow",
+              "Action": "cognito-idp:*",
+              "Resource": [
+                "arn:aws:wafv2:*:194858711721:*/webacl/*/*",
+                "arn:aws:cognito-idp:*:194858711721:userpool/*"
+              ]
             }
           ]
         }
       Groups:
-        - !Ref BasicPermissionsCIGroup
+        - !Ref ApplicationPermissionCIGroups
+
+  LambdaCustomPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "Lambda custom policy"
+      PolicyDocument:
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "VisualEditor0",
+              "Effect": "Allow",
+              "Action": [
+                "lambda:CreateFunction",
+                "lambda:TagResource",
+                "lambda:DeleteProvisionedConcurrencyConfig",
+                "lambda:GetFunctionConfiguration",
+                "lambda:EnableReplication",
+                "lambda:ListProvisionedConcurrencyConfigs",
+                "lambda:DisableReplication",
+                "lambda:GetProvisionedConcurrencyConfig",
+                "lambda:ListLayers",
+                "lambda:ListLayerVersions",
+                "lambda:DeleteFunction",
+                "lambda:GetAlias",
+                "lambda:ListCodeSigningConfigs",
+                "lambda:UpdateFunctionUrlConfig",
+                "lambda:CreateFunctionUrlConfig",
+                "lambda:UpdateFunctionEventInvokeConfig",
+                "lambda:DeleteFunctionCodeSigningConfig",
+                "lambda:InvokeFunctionUrl",
+                "lambda:ListFunctions",
+                "lambda:GetEventSourceMapping",
+                "lambda:InvokeFunction",
+                "lambda:ListAliases",
+                "lambda:GetFunctionUrlConfig",
+                "lambda:AddLayerVersionPermission",
+                "lambda:GetFunctionCodeSigningConfig",
+                "lambda:UpdateAlias",
+                "lambda:UpdateFunctionCode",
+                "lambda:ListFunctionEventInvokeConfigs",
+                "lambda:ListFunctionsByCodeSigningConfig",
+                "lambda:GetFunctionConcurrency",
+                "lambda:PutProvisionedConcurrencyConfig",
+                "lambda:ListEventSourceMappings",
+                "lambda:PublishVersion",
+                "lambda:DeleteEventSourceMapping",
+                "lambda:CreateAlias",
+                "lambda:ListVersionsByFunction",
+                "lambda:GetLayerVersion",
+                "lambda:PublishLayerVersion",
+                "lambda:InvokeAsync",
+                "lambda:GetAccountSettings",
+                "lambda:CreateEventSourceMapping",
+                "lambda:GetLayerVersionPolicy",
+                "lambda:UntagResource",
+                "lambda:RemoveLayerVersionPermission",
+                "lambda:PutFunctionConcurrency",
+                "lambda:DeleteCodeSigningConfig",
+                "lambda:ListTags",
+                "lambda:DeleteLayerVersion",
+                "lambda:PutFunctionEventInvokeConfig",
+                "lambda:DeleteFunctionEventInvokeConfig",
+                "lambda:CreateCodeSigningConfig",
+                "lambda:PutFunctionCodeSigningConfig",
+                "lambda:UpdateEventSourceMapping",
+                "lambda:UpdateFunctionCodeSigningConfig",
+                "lambda:GetFunction",
+                "lambda:UpdateFunctionConfiguration",
+                "lambda:ListFunctionUrlConfigs",
+                "lambda:UpdateCodeSigningConfig",
+                "lambda:AddPermission",
+                "lambda:GetFunctionEventInvokeConfig",
+                "lambda:DeleteAlias",
+                "lambda:DeleteFunctionConcurrency",
+                "lambda:GetCodeSigningConfig",
+                "lambda:DeleteFunctionUrlConfig",
+                "lambda:RemovePermission",
+                "lambda:GetPolicy"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      Groups:
+        - !Ref ApplicationPermissionCIGroups
 
 Outputs:
   CIUserAccessKeyId:
