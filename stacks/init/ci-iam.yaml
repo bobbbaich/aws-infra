@@ -40,6 +40,7 @@ Resources:
             {
               "Effect": "Allow",
               "Action": [
+                "iam:*",
                 "cloudformation:*",
                 "s3:*",
                 "route53:*",
