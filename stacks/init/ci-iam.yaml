@@ -71,6 +71,8 @@ Resources:
               "Effect": "Allow",
               "Action": [
                 "cognito-idp:ForgotPassword",
+                "cognito-idp:CreateUserPoolDomain",
+                "cognito-idp:DeleteUserPool",
                 "cognito-idp:GlobalSignOut",
                 "cognito-idp:ConfirmSignUp",
                 "cognito-idp:CreateUserPool",
