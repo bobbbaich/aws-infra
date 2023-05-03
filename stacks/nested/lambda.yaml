@@ -25,7 +25,7 @@ Resources:
     Properties:
       Handler: database_setup.lambda_handler
       Runtime: python3.9
-      CodeUri: ../lambda/database-setup
+      CodeUri: ../../lambda/database-setup
       Timeout: 45
       VpcConfig:
         SecurityGroupIds:
