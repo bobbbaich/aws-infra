@@ -16,6 +16,7 @@ Resources:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref CIUser
+      Serial: 1
 
   BasicPermissionsCIGroup:
     Type: AWS::IAM::Group
