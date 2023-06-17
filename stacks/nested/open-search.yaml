@@ -11,6 +11,15 @@ Parameters:
 
 Resources:
 
+  EncryptionPolicy:
+    Type: AWS::OpenSearchServerless::SecurityPolicy
+    Properties:
+      Name: !Sub collection/${EnvironmentName}-* security policy
+      Type: encryption
+      Description: Encryption policy for test collection
+      Policy: !Sub >-
+        {"Rules":[{"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]}],"AWSOwnedKey":true}
+
   RewardsCollection:
     Type: AWS::OpenSearchServerless::Collection
     DependsOn: EncryptionPolicy
@@ -19,11 +28,8 @@ Resources:
       Type: SEARCH
       Description: Search reward service collection
 
-  EncryptionPolicy:
-    Type: AWS::OpenSearchServerless::SecurityPolicy
-    Properties:
-      Name: !Sub collection/${EnvironmentName}-* security policy
-      Type: encryption
-      Description: Encryption policy for test collection
-      Policy: >-
-        !Sub {"Rules":[{"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]}],"AWSOwnedKey":true}
+Outputs:
+  RewardsCollectionDashboardURL:
+    Value: !GetAtt RewardsCollection.DashboardEndpoint
+  RewardsCollectionArn:
+    Value: !GetAtt RewardsCollection.Arn
