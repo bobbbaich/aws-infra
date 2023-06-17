@@ -92,19 +92,19 @@ Resources:
   #      TemplateURL: ../stacks/nested/ecs-cluster.yaml
   #      TimeoutInMinutes: !Ref StackTimeout
 
-#  ServiceDiscovery:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn:
-#      - VPC
-#    Properties:
-#      Parameters:
-#        EnvironmentName: !Ref EnvironmentName
-#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-#      Tags:
-#        - Key: environment
-#          Value: !Ref EnvironmentName
-#      TemplateURL: ../stacks/nested/service-discovery.yaml
-#      TimeoutInMinutes: !Ref StackTimeout
+  #  ServiceDiscovery:
+  #    Type: AWS::CloudFormation::Stack
+  #    DependsOn:
+  #      - VPC
+  #    Properties:
+  #      Parameters:
+  #        EnvironmentName: !Ref EnvironmentName
+  #        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+  #      Tags:
+  #        - Key: environment
+  #          Value: !Ref EnvironmentName
+  #      TemplateURL: ../stacks/nested/service-discovery.yaml
+  #      TimeoutInMinutes: !Ref StackTimeout
 
   #  AppMesh:
   #    Type: AWS::CloudFormation::Stack
@@ -169,9 +169,6 @@ Resources:
         EnvironmentName: !Ref EnvironmentName
         VpcId: !GetAtt [ VPC, Outputs.VpcId ]
         VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
-        CognitoUserPoolId: !GetAtt [ CognitoUserPool, Outputs.CognitoUserPoolId ]
-        CognitoIdentityPoolId: !GetAtt [ CognitoUserPool, Outputs.CognitoIdentityPoolId ]
-        CognitoAuthenticatedRoleArn: !GetAtt [ CognitoUserPool, Outputs.CognitoAuthenticatedRoleArn ]
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName

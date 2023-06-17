@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: OpenSearchServiceDomain resource
+Description: Open search serverless collections
 
 Parameters:
   EnvironmentName:
@@ -8,87 +8,21 @@ Parameters:
     Type: AWS::EC2::VPC::Id
   VpcPrivateSubnetIds:
     Type: CommaDelimitedList
-  CognitoUserPoolId:
-    Type: String
-  CognitoIdentityPoolId:
-    Type: String
-  CognitoAuthenticatedRoleArn:
-    Type: String
-  DomainName:
-    Type: String
-    Default: es-cluster
 
 Resources:
 
-  OpenSearchServiceDomain:
-    Type: AWS::OpenSearchService::Domain
+  RewardsCollection:
+    Type: AWS::OpenSearchServerless::Collection
+    DependsOn: EncryptionPolicy
     Properties:
-      DomainName: !Sub ${EnvironmentName}-${DomainName}
-      EngineVersion: OpenSearch_2.5
-      ClusterConfig:
-        InstanceCount: 2
-        InstanceType: t3.small.search
-        ZoneAwarenessEnabled: true
-        ZoneAwarenessConfig:
-          AvailabilityZoneCount: 2
-      EBSOptions:
-        EBSEnabled: true
-        Iops: 0
-        VolumeSize: 10
-        VolumeType: gp2
-      CognitoOptions:
-        Enabled: 'true'
-        UserPoolId: !Ref CognitoUserPoolId
-        IdentityPoolId: !Ref CognitoIdentityPoolId
-        RoleArn: !GetAtt CognitoAccessRoleForOpenSearch.Arn
-      AccessPolicies:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              AWS: !Ref CognitoAuthenticatedRoleArn
-            Action:
-              - 'es:*'
-            Resource: !Sub arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${EnvironmentName}-${DomainName}/*
-      AdvancedOptions:
-        rest.action.multi.allow_explicit_index: true
-        override_main_response_version: true
-      VPCOptions:
-        SubnetIds: !Ref VpcPrivateSubnetIds
-        SecurityGroupIds:
-          - !Ref OpenSearchSecurityGroup
+      Name: !Sub ${EnvironmentName}-rewards
+      Type: SEARCH
+      Description: Search reward service collection
 
-  CognitoAccessRoleForOpenSearch:
-    Type: AWS::IAM::Role
+  EncryptionPolicy:
+    Type: AWS::OpenSearchServerless::SecurityPolicy
     Properties:
-      RoleName: !Sub ${EnvironmentName}-CognitoAccessRoleForOpenSearch
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - es.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Path: /
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/AmazonOpenSearchServiceCognitoAccess'
-
-  OpenSearchSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security group for OpenSearch service
-      VpcId: !Ref VpcId
-      GroupName: !Sub ${EnvironmentName}-OpenSearchSecurityGroup
-      SecurityGroupIngress:
-        - FromPort: 443
-          IpProtocol: tcp
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
-
-Outputs:
-  OpenSearchServiceDomainArn:
-    Value: !GetAtt OpenSearchServiceDomain.Arn
-  OpenSearchServiceDomainEndpoint:
-    Value: !GetAtt OpenSearchServiceDomain.DomainEndpoint
+      Name: !Sub collection/${EnvironmentName}-* security policy
+      Type: encryption
+      Description: Encryption policy for test collection
+      Policy: !Sub '{"Rules":[{"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]}],"AWSOwnedKey":true}'
