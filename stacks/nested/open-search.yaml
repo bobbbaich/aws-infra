@@ -11,18 +11,18 @@ Parameters:
 
 Resources:
 
-  EncryptionPolicy:
+  SecurityPolicy:
     Type: AWS::OpenSearchServerless::SecurityPolicy
     Properties:
-      Name: !Sub collection/${EnvironmentName}-* security policy
+      Name: !Sub ${EnvironmentName}-sp
       Type: encryption
-      Description: Encryption policy for test collection
+      Description: !Sub collection/${EnvironmentName}-* security policy
       Policy: !Sub >-
         {"Rules":[{"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]}],"AWSOwnedKey":true}
 
   RewardsCollection:
     Type: AWS::OpenSearchServerless::Collection
-    DependsOn: EncryptionPolicy
+    DependsOn: SecurityPolicy
     Properties:
       Name: !Sub ${EnvironmentName}-rewards
       Type: SEARCH
