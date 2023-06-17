@@ -24,6 +24,7 @@ Resources:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: !Sub ${EnvironmentName}-${DomainName}
+      EngineVersion: OpenSearch_2.5
       ClusterConfig:
         InstanceCount: 1
         InstanceType: 't2.micro.search'
