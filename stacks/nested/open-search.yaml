@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: OpenSearchServiceDomain resource
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  VpcId:
+    Type: String
+  VpcPrivateSubnetIds:
+    Type: String
+  CognitoUserPoolId:
+    Type: String
+  CognitoIdentityPoolId:
+    Type: String
+  CognitoAuthenticatedRoleArn:
+    Type: String
+  DomainName:
+    Type: String
+    Default: open-search-cluster
+
+Resources:
+
+  OpenSearchServiceDomain:
+    Type: AWS::OpenSearchService::Domain
+    Properties:
+      DomainName: !Sub ${EnvironmentName}-{DomainName}
+      ClusterConfig:
+        InstanceCount: 1
+        InstanceType: 't2.micro.search'
+      EBSOptions:
+        EBSEnabled: 'true'
+        Iops: 0
+        VolumeSize: 10
+        VolumeType: gp2
+      CognitoOptions:
+        Enabled: 'true'
+        UserPoolId: !Ref CognitoUserPoolId
+        IdentityPoolId: !Ref CognitoIdentityPoolId
+        RoleArn: !GetAtt CognitoAccessRoleForOpenSearch.Arn
+      AccessPolicies:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref CognitoAuthenticatedRoleArn
+            Action:
+              - 'es:*'
+            Resource: !Sub arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${DomainName}/*
+      AdvancedOptions:
+        rest.action.multi.allow_explicit_index: true
+        override_main_response_version: true
+      VPCOptions:
+        SubnetIds: !Ref VpcPrivateSubnetIds
+        SecurityGroupIds:
+          - !Ref OpenSearchSecurityGroup
+
+  CognitoAccessRoleForOpenSearch:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${EnvironmentName}-CognitoAccessRoleForOpenSearch
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - es.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonOpenSearchServiceCognitoAccess'
+
+  OpenSearchSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for OpenSearch service
+      VpcId: !Ref VpcId
+      GroupName: !Sub ${EnvironmentName}-OpenSearchSecurityGroup
+      SecurityGroupIngress:
+        - FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  OpenSearchServiceDomainArn:
+    Value: !GetAtt OpenSearchServiceDomain.Arn
+  OpenSearchServiceDomainEndpoint:
+    Value: !GetAtt OpenSearchServiceDomain.DomainEndpoint

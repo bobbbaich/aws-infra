@@ -94,7 +94,7 @@ Resources:
   AuthenticatedRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: 'ops-cognitoAuthRole'
+      RoleName: !Sub ${EnvironmentName}-CognitoAuthenticatedRole
       Path: /
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -124,7 +124,7 @@ Resources:
   UnAuthenticatedRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: 'ops-cognitoUnauthRole'
+      RoleName: !Sub ${EnvironmentName}-CognitoUnAuthenticatedRole
       Path: /
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -325,10 +325,10 @@ Outputs:
     Description: The app client ID
     Export:
       Name: !Sub ${EnvironmentName}:CognitoClientId
-  CognitoIdentityPool:
+  CognitoIdentityPoolId:
     Description: This is the cognito identity pool.
     Value: !Ref IdentityPool
-  CognitoAuthRoleArn:
+  CognitoAuthenticatedRoleArn:
     Description: ARN of the Authentication Role for Cognito Users
     Value: !GetAtt AuthenticatedRole.Arn
   CognitoUser:
