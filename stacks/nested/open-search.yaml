@@ -5,9 +5,9 @@ Parameters:
   EnvironmentName:
     Type: String
   VpcId:
-    Type: String
+    Type: AWS::EC2::VPC::Id
   VpcPrivateSubnetIds:
-    Type: String
+    Type: CommaDelimitedList
   CognitoUserPoolId:
     Type: String
   CognitoIdentityPoolId:
