@@ -27,7 +27,7 @@ Resources:
       EngineVersion: OpenSearch_2.5
       ClusterConfig:
         InstanceCount: 1
-        InstanceType: 't2.micro.search'
+        InstanceType: t3.small.search
       EBSOptions:
         EBSEnabled: 'true'
         Iops: 0
