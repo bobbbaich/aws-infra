@@ -20,6 +20,21 @@ Resources:
       Policy: !Sub >-
         {"Rules":[{"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]}],"AWSOwnedKey":true}
 
+  VpcEndpointSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub ${EnvironmentName}-vpc-endpoint-sg
+      GroupDescription: OpenSearch Serverless VPC endpoint security group
+      VpcId: !Ref VpcId
+
+  VpcEndpoint:
+    Type: AWS::OpenSearchServerless::VpcEndpoint
+    Properties:
+      Name: !Sub ${EnvironmentName}-vpc-endpoint
+      VpcId: !Ref VpcId
+      SubnetIds: !Ref VpcPrivateSubnetIds
+      SecurityGroupIds: [ !Ref VpcEndpointSG ]
+
   RewardsCollection:
     Type: AWS::OpenSearchServerless::Collection
     DependsOn: SecurityPolicy
