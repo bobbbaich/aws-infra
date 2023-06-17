@@ -23,7 +23,7 @@ Resources:
   OpenSearchServiceDomain:
     Type: AWS::OpenSearchService::Domain
     Properties:
-      DomainName: !Sub ${EnvironmentName}-{DomainName}
+      DomainName: !Sub ${EnvironmentName}-${DomainName}
       ClusterConfig:
         InstanceCount: 1
         InstanceType: 't2.micro.search'
@@ -45,7 +45,7 @@ Resources:
               AWS: !Ref CognitoAuthenticatedRoleArn
             Action:
               - 'es:*'
-            Resource: !Sub arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${DomainName}/*
+            Resource: !Sub arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${EnvironmentName}-${DomainName}/*
       AdvancedOptions:
         rest.action.multi.allow_explicit_index: true
         override_main_response_version: true
