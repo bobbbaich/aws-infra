@@ -16,7 +16,7 @@ Parameters:
     Type: String
   DomainName:
     Type: String
-    Default: open-search-cluster
+    Default: es-cluster
 
 Resources:
 
