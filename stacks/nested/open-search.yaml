@@ -26,10 +26,13 @@ Resources:
       DomainName: !Sub ${EnvironmentName}-${DomainName}
       EngineVersion: OpenSearch_2.5
       ClusterConfig:
-        InstanceCount: 1
+        InstanceCount: 2
         InstanceType: t3.small.search
+        ZoneAwarenessEnabled: true
+        ZoneAwarenessConfig:
+          AvailabilityZoneCount: 2
       EBSOptions:
-        EBSEnabled: 'true'
+        EBSEnabled: true
         Iops: 0
         VolumeSize: 10
         VolumeType: gp2
