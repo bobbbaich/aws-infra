@@ -90,7 +90,6 @@ Resources:
                   - 'es:*'
                 Resource:
                   - '*'
-                  -
 
   AuthenticatedRole:
     Type: AWS::IAM::Role
