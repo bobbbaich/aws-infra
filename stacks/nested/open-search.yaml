@@ -11,12 +11,37 @@ Parameters:
 
 Resources:
 
-  SecurityPolicy:
+  DataAccessPolicy:
+    Type: AWS::OpenSearchServerless::AccessPolicy
+    Properties:
+      Name: !Sub ${EnvironmentName}-ap
+      Type: data
+      Description: !Sub ${EnvironmentName} access policy
+      Policy: !Sub >-
+        [{"Description":"Access for cfn user",
+        "Rules":[
+        {"ResourceType":"index","Resource":["index/*/*"],"Permission":["aoss:*"]},
+        {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"],"Permission":["aoss:*"]}],
+        "Principal":["arn:aws:iam::${AWS::AccountId}:user/*"]}]
+
+  NetworkSecurityPolicy:
     Type: AWS::OpenSearchServerless::SecurityPolicy
     Properties:
-      Name: !Sub ${EnvironmentName}-sp
+      Name: !Sub ${EnvironmentName}-nsp
+      Type: network
+      Description: !Sub ${EnvironmentName} network security policy
+      Policy: !Sub >-
+        [{"Rules":[
+        {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]},
+        {"ResourceType":"dashboard","Resource":["collection/${EnvironmentName}-*"]}],
+        "AllowFromPublic":false}]
+
+  EncryptionSecurityPolicy:
+    Type: AWS::OpenSearchServerless::SecurityPolicy
+    Properties:
+      Name: !Sub ${EnvironmentName}-esp
       Type: encryption
-      Description: !Sub collection/${EnvironmentName}-* security policy
+      Description: !Sub ${EnvironmentName} encryption security policy
       Policy: !Sub >-
         {"Rules":[{"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]}],"AWSOwnedKey":true}
 
@@ -37,11 +62,13 @@ Resources:
 
   RewardsCollection:
     Type: AWS::OpenSearchServerless::Collection
-    DependsOn: SecurityPolicy
+    DependsOn:
+      - NetworkSecurityPolicy
+      - EncryptionSecurityPolicy
     Properties:
       Name: !Sub ${EnvironmentName}-rewards
       Type: SEARCH
-      Description: Search reward service collection
+      Description: Reward service collection
 
 Outputs:
   RewardsCollectionDashboardURL:
