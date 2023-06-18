@@ -74,15 +74,7 @@ Resources:
                 "Resource": [
                   "collection/${EnvironmentName}*"
                 ]
-              }
-            ],
-            "AllowFromPublic": false,
-            "SourceVPCEs": [
-              "${VpcEndpoint}"
-            ]
-          },
-          {
-            "Rules": [
+              },
               {
                 "ResourceType": "dashboard",
                 "Resource": [
@@ -90,7 +82,10 @@ Resources:
                 ]
               }
             ],
-            "AllowFromPublic": true
+            "AllowFromPublic": false,
+            "SourceVPCEs": [
+              "${VpcEndpoint}"
+            ]
           }
         ]
 
