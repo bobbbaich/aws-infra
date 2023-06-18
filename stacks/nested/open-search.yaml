@@ -119,6 +119,11 @@ Resources:
       GroupName: !Sub ${EnvironmentName}-vpc-endpoint-sg
       GroupDescription: OpenSearch Serverless VPC endpoint security group
       VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: TCP
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
 
   VpcEndpoint:
     Type: AWS::OpenSearchServerless::VpcEndpoint
