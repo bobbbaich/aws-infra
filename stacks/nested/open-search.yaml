@@ -63,7 +63,7 @@ Resources:
   RewardsCollection:
     Type: AWS::OpenSearchServerless::Collection
     DependsOn:
-      - NetworkSecurityPolicy
+#      - NetworkSecurityPolicy
       - EncryptionSecurityPolicy
     Properties:
       Name: !Sub ${EnvironmentName}-rewards
