@@ -18,10 +18,33 @@ Resources:
       Type: data
       Description: !Sub ${EnvironmentName} access policy
       Policy: !Sub >-
-        [{"Rules":[
-        {"ResourceType":"index","Resource":["index/*/*"],"Permission":["aoss:*"]},
-        {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"],"Permission":["aoss:*"]}],
-        "Principal":["arn:aws:iam::${AWS::AccountId}:*"]}]
+        [
+          {
+            "Rules": [
+              {
+                "ResourceType": "index",
+                "Resource": [
+                  "index/*/*"
+                ],
+                "Permission": [
+                  "aoss:*"
+                ]
+              },
+              {
+                "Resource": [
+                  "collection/development-rewards"
+                ],
+                "Permission": [
+                  "aoss:*"
+                ],
+                "ResourceType": "collection"
+              }
+            ],
+            "Principal": [
+              "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/observability.aoss.amazonaws.com/AWSServiceRoleForAmazonOpenSearchServerless"
+            ]
+          }
+        ]
 
   NetworkSecurityPolicy:
     Type: AWS::OpenSearchServerless::SecurityPolicy
