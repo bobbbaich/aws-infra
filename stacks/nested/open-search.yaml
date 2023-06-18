@@ -32,7 +32,7 @@ Resources:
               },
               {
                 "Resource": [
-                  "collection/development-rewards"
+                  "collection/${EnvironmentName}*"
                 ],
                 "Permission": [
                   "aoss:*"
@@ -60,7 +60,7 @@ Resources:
               {
                 "ResourceType": "collection",
                 "Resource": [
-                  "collection/${EnvironmentName}-*"
+                  "collection/${EnvironmentName}*"
                 ]
               }
             ],
@@ -74,7 +74,7 @@ Resources:
               {
                 "ResourceType": "dashboard",
                 "Resource": [
-                  "collection/${EnvironmentName}-*"
+                  "collection/${EnvironmentName}*"
                 ]
               }
             ],
@@ -94,7 +94,7 @@ Resources:
             {
               "ResourceType": "collection",
               "Resource": [
-                "collection/${EnvironmentName}-*"
+                "collection/${EnvironmentName}*"
               ]
             }
           ],
