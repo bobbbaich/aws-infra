@@ -11,6 +11,17 @@ Parameters:
 
 Resources:
 
+  OpenSearchUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: open-search-user
+
+  OpenSearchUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref OpenSearchUser
+      Serial: 1
+
   DataAccessPolicy:
     Type: AWS::OpenSearchServerless::AccessPolicy
     Properties:
@@ -41,7 +52,8 @@ Resources:
               }
             ],
             "Principal": [
-              "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/observability.aoss.amazonaws.com/AWSServiceRoleForAmazonOpenSearchServerless"
+              "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/observability.aoss.amazonaws.com/AWSServiceRoleForAmazonOpenSearchServerless",
+              "${OpenSearchUser.Arn}"
             ]
           }
         ]
