@@ -54,12 +54,33 @@ Resources:
       Type: network
       Description: !Sub ${EnvironmentName} network security policy
       Policy: !Sub >-
-        [{"Rules":[
-        {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]},
-        {"ResourceType":"dashboard","Resource":["collection/${EnvironmentName}-*"]}],
-        "AllowFromPublic":false,
-        "SourceVPCEs":["${VpcEndpoint}"]
-        }]
+        [
+          {
+            "Rules": [
+              {
+                "ResourceType": "collection",
+                "Resource": [
+                  "collection/${EnvironmentName}-*"
+                ]
+              }
+            ],
+            "AllowFromPublic": false,
+            "SourceVPCEs": [
+              "${VpcEndpoint}"
+            ]
+          },
+          {
+            "Rules": [
+              {
+                "ResourceType": "dashboard",
+                "Resource": [
+                  "collection/${EnvironmentName}-*"
+                ]
+              }
+            ],
+            "AllowFromPublic": true
+          }
+        ]
 
   EncryptionSecurityPolicy:
     Type: AWS::OpenSearchServerless::SecurityPolicy
@@ -68,7 +89,17 @@ Resources:
       Type: encryption
       Description: !Sub ${EnvironmentName} encryption security policy
       Policy: !Sub >-
-        {"Rules":[{"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]}],"AWSOwnedKey":true}
+        {
+          "Rules": [
+            {
+              "ResourceType": "collection",
+              "Resource": [
+                "collection/${EnvironmentName}-*"
+              ]
+            }
+          ],
+          "AWSOwnedKey": true
+        }
 
   VpcEndpointSG:
     Type: AWS::EC2::SecurityGroup
