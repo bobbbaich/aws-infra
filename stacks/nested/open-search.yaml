@@ -24,17 +24,17 @@ Resources:
 #        {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"],"Permission":["aoss:*"]}],
 #        "Principal":["arn:aws:iam::${AWS::AccountId}:user/*"]}]
 #
-#  NetworkSecurityPolicy:
-#    Type: AWS::OpenSearchServerless::SecurityPolicy
-#    Properties:
-#      Name: !Sub ${EnvironmentName}-nsp
-#      Type: network
-#      Description: !Sub ${EnvironmentName} network security policy
-#      Policy: !Sub >-
-#        [{"Rules":[
-#        {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]},
-#        {"ResourceType":"dashboard","Resource":["collection/${EnvironmentName}-*"]}],
-#        "AllowFromPublic":false}]
+  NetworkSecurityPolicy:
+    Type: AWS::OpenSearchServerless::SecurityPolicy
+    Properties:
+      Name: !Sub ${EnvironmentName}-nsp
+      Type: network
+      Description: !Sub ${EnvironmentName} network security policy
+      Policy: !Sub >-
+        [{"Rules":[
+        {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]},
+        {"ResourceType":"dashboard","Resource":["collection/${EnvironmentName}-*"]}],
+        "AllowFromPublic":false}]
 
   EncryptionSecurityPolicy:
     Type: AWS::OpenSearchServerless::SecurityPolicy
@@ -63,7 +63,7 @@ Resources:
   RewardsCollection:
     Type: AWS::OpenSearchServerless::Collection
     DependsOn:
-#      - NetworkSecurityPolicy
+      - NetworkSecurityPolicy
       - EncryptionSecurityPolicy
     Properties:
       Name: !Sub ${EnvironmentName}-rewards
