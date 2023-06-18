@@ -34,7 +34,6 @@ Resources:
         [{"Rules":[
         {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]},
         {"ResourceType":"dashboard","Resource":["collection/${EnvironmentName}-*"]}],
-        "AllowFromPublic":false,
         "SourceVPCEs":["${VpcId}"]
         }]
 
