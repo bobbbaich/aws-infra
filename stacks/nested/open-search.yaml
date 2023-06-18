@@ -26,6 +26,7 @@ Resources:
 #
   NetworkSecurityPolicy:
     Type: AWS::OpenSearchServerless::SecurityPolicy
+    DependsOn: VpcEndpoint
     Properties:
       Name: !Sub ${EnvironmentName}-nsp
       Type: network
@@ -34,7 +35,8 @@ Resources:
         [{"Rules":[
         {"ResourceType":"collection","Resource":["collection/${EnvironmentName}-*"]},
         {"ResourceType":"dashboard","Resource":["collection/${EnvironmentName}-*"]}],
-        "SourceVPCEs":["${VpcId}"]
+        "AllowFromPublic":false,
+        "SourceVPCEs":["${VpcEndpoint}"]
         }]
 
   EncryptionSecurityPolicy:
