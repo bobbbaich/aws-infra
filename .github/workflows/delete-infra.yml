@@ -2,7 +2,7 @@ name: Delete Infrastructure
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/6 * * * *'
 
 env:
   ENVIRONMENT: development
