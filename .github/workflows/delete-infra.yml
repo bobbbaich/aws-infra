@@ -2,7 +2,7 @@ name: Deploy Infrastructure
 
 on:
   schedule:
-    - cron: '0 */5 * ? * *'
+    - cron: '*/5 * * * *'
 
 env:
   ENVIRONMENT: development
