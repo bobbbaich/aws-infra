@@ -14,17 +14,17 @@ Resources:
       RegistryName: !Sub ${EnvironmentName}-schema-registry
       Description: !Sub ${EnvironmentName} schema registry
 
-  MySchema:
+  RewardSchema:
     Type: AWS::EventSchemas::Schema
     Properties:
       RegistryName: !Ref SchemaRegistry
       Type: OpenApi3
-      Description: My Event Schema
+      Description: Reward schema
       Content: |
         {
           "openapi": "3.0.0",
           "info": {
-            "title": "Rewards Schema",
+            "title": "Reward Schema",
             "version": "1.0"
           },
           "paths": {
