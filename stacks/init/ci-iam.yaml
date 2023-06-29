@@ -43,6 +43,7 @@ Resources:
         - 'arn:aws:iam::aws:policy/AmazonRDSFullAccess'
         - 'arn:aws:iam::aws:policy/AWSAppMeshFullAccess'
         - 'arn:aws:iam::aws:policy/AmazonSQSFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonEventBridgeFullAccess'
         - 'arn:aws:iam::aws:policy/AWSCloudMapFullAccess'
 
   BasicPermissionsCIGroupMembership:

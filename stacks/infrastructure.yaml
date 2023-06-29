@@ -14,18 +14,166 @@ Parameters:
 
 Resources:
 
-  VPC:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/vpc.yaml
-      TimeoutInMinutes: !Ref StackTimeout
+#  VPC:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/vpc.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  ECSRoles:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/ecs-roles.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  RDS:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn:
+#      - VPC
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+#        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/rds.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  Lambda:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn:
+#      - VPC
+#      - RDS
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
+#        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
+#        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
+#        RDSSecretsArn: !GetAtt [ RDS, Outputs.RDSSecretsArn ]
+#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+#        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/lambda.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  ECSCluster:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn:
+#      - VPC
+#      - RDS
+#      - Certificates
+#      - ECSRoles
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+#        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
+#        LoadBalancerPublicSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PublicSubnet1 ], !GetAtt [ VPC, Outputs.PublicSubnet2 ] ] ]
+#        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
+#        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/ecs-cluster.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  ServiceDiscovery:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn:
+#      - VPC
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/service-discovery.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  AppMesh:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn:
+#      - ServiceDiscovery
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/app-mesh.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  Certificates:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        AppDomainName: !Ref AppDomainName
+#        HostedZoneId: !Ref HostedZoneId
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/acm.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  AppClient:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn:
+#      - Certificates
+#      - ECSCluster
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        AppDomainName: !Ref AppDomainName
+#        HostedZoneId: !Ref HostedZoneId
+#        ALBDNSName: !GetAtt [ ECSCluster, Outputs.ALBDNSName ]
+#        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/cdn.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  CognitoUserPool:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#        AppDomainName: !Ref AppDomainName
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/user-pool.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
+#
+#  SQS:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      Parameters:
+#        EnvironmentName: !Ref EnvironmentName
+#      Tags:
+#        - Key: environment
+#          Value: !Ref EnvironmentName
+#      TemplateURL: ../stacks/nested/sqs.yaml
+#      TimeoutInMinutes: !Ref StackTimeout
 
-  ECSRoles:
+  EventBridge:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
@@ -33,142 +181,5 @@ Resources:
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/ecs-roles.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  RDS:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - VPC
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/rds.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  Lambda:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - VPC
-      - RDS
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        DBHost: !GetAtt [ RDS, Outputs.DBInstanceHost ]
-        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
-        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
-        RDSSecretsArn: !GetAtt [ RDS, Outputs.RDSSecretsArn ]
-        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-        VpcPrivateSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PrivateSubnet1 ], !GetAtt [ VPC, Outputs.PrivateSubnet2 ] ] ]
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/lambda.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  ECSCluster:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - VPC
-      - RDS
-      - Certificates
-      - ECSRoles
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-        DBSecurityGroupId: !GetAtt [ RDS, Outputs.DatabaseSG ]
-        LoadBalancerPublicSubnetIds: !Join [ ",", [ !GetAtt [ VPC, Outputs.PublicSubnet1 ], !GetAtt [ VPC, Outputs.PublicSubnet2 ] ] ]
-        DBPort: !GetAtt [ RDS, Outputs.DBInstancePort ]
-        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/ecs-cluster.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  ServiceDiscovery:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - VPC
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/service-discovery.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  AppMesh:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - ServiceDiscovery
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/app-mesh.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  Certificates:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        AppDomainName: !Ref AppDomainName
-        HostedZoneId: !Ref HostedZoneId
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/acm.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  AppClient:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - Certificates
-      - ECSCluster
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        AppDomainName: !Ref AppDomainName
-        HostedZoneId: !Ref HostedZoneId
-        ALBDNSName: !GetAtt [ ECSCluster, Outputs.ALBDNSName ]
-        ApplicationCertificateArn: !GetAtt [ Certificates, Outputs.ApplicationCertificateArn ]
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/cdn.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  CognitoUserPool:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-        AppDomainName: !Ref AppDomainName
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/user-pool.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
-  SQS:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/sqs.yaml
+      TemplateURL: ../stacks/nested/event-bridge.yaml
       TimeoutInMinutes: !Ref StackTimeout

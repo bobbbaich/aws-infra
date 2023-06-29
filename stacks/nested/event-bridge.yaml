@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys AWS SSl/TLS Certificates
+
+Parameters:
+  EnvironmentName:
+    Type: String
+
+Resources:
+
+  MySchemaRegistry:
+    Type: AWS::EventSchemas::Registry
+    Properties:
+      RegistryName: !Sub ${EnvironmentName}-schema-registry
+      Description: !Sub ${EnvironmentName} schema registry
