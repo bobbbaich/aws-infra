@@ -106,19 +106,6 @@ Resources:
       TemplateURL: ../stacks/nested/service-discovery.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
-  AppMesh:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - ServiceDiscovery
-    Properties:
-      Parameters:
-        EnvironmentName: !Ref EnvironmentName
-      Tags:
-        - Key: environment
-          Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/app-mesh.yaml
-      TimeoutInMinutes: !Ref StackTimeout
-
   Certificates:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -162,7 +149,7 @@ Resources:
       TemplateURL: ../stacks/nested/user-pool.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
-  SQS:
+  EventBridge:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
@@ -170,5 +157,5 @@ Resources:
       Tags:
         - Key: environment
           Value: !Ref EnvironmentName
-      TemplateURL: ../stacks/nested/sqs.yaml
+      TemplateURL: ../stacks/nested/event-bridge.yaml
       TimeoutInMinutes: !Ref StackTimeout

@@ -1,0 +1,20 @@
+#file: noinspection YAMLSchemaValidation
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys EventBridge resources
+
+Parameters:
+  EnvironmentName:
+    Type: String
+
+Resources:
+  EventBus:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: !Sub ${EnvironmentName}-event-bus
+
+Outputs:
+  EventBus:
+    Description: !Sub ARN of ${EnvironmentName} event bus
+    Value: !Ref EventBus
+    Export:
+      Name: !Sub ${EnvironmentName}:EventBus
