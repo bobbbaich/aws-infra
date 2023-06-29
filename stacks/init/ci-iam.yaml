@@ -100,72 +100,27 @@ Resources:
             {
               "Effect": "Allow",
               "Action": [
-                "lambda:CreateFunction",
-                "lambda:TagResource",
-                "lambda:DeleteProvisionedConcurrencyConfig",
-                "lambda:GetFunctionConfiguration",
-                "lambda:EnableReplication",
-                "lambda:ListProvisionedConcurrencyConfigs",
-                "lambda:DisableReplication",
-                "lambda:GetProvisionedConcurrencyConfig",
-                "lambda:ListLayers",
-                "lambda:ListLayerVersions",
-                "lambda:DeleteFunction",
-                "lambda:GetAlias",
-                "lambda:ListCodeSigningConfigs",
-                "lambda:UpdateFunctionUrlConfig",
-                "lambda:CreateFunctionUrlConfig",
-                "lambda:UpdateFunctionEventInvokeConfig",
-                "lambda:DeleteFunctionCodeSigningConfig",
-                "lambda:InvokeFunctionUrl",
-                "lambda:ListFunctions",
-                "lambda:GetEventSourceMapping",
-                "lambda:InvokeFunction",
-                "lambda:ListAliases",
-                "lambda:GetFunctionUrlConfig",
-                "lambda:AddLayerVersionPermission",
-                "lambda:GetFunctionCodeSigningConfig",
-                "lambda:UpdateAlias",
-                "lambda:UpdateFunctionCode",
-                "lambda:ListFunctionEventInvokeConfigs",
-                "lambda:ListFunctionsByCodeSigningConfig",
-                "lambda:GetFunctionConcurrency",
-                "lambda:PutProvisionedConcurrencyConfig",
-                "lambda:ListEventSourceMappings",
-                "lambda:PublishVersion",
-                "lambda:DeleteEventSourceMapping",
-                "lambda:CreateAlias",
-                "lambda:ListVersionsByFunction",
-                "lambda:GetLayerVersion",
-                "lambda:PublishLayerVersion",
-                "lambda:InvokeAsync",
-                "lambda:GetAccountSettings",
-                "lambda:CreateEventSourceMapping",
-                "lambda:GetLayerVersionPolicy",
-                "lambda:UntagResource",
-                "lambda:RemoveLayerVersionPermission",
-                "lambda:PutFunctionConcurrency",
-                "lambda:DeleteCodeSigningConfig",
-                "lambda:ListTags",
-                "lambda:DeleteLayerVersion",
-                "lambda:PutFunctionEventInvokeConfig",
-                "lambda:DeleteFunctionEventInvokeConfig",
-                "lambda:CreateCodeSigningConfig",
-                "lambda:PutFunctionCodeSigningConfig",
-                "lambda:UpdateEventSourceMapping",
-                "lambda:UpdateFunctionCodeSigningConfig",
-                "lambda:GetFunction",
-                "lambda:UpdateFunctionConfiguration",
-                "lambda:ListFunctionUrlConfigs",
-                "lambda:UpdateCodeSigningConfig",
-                "lambda:AddPermission",
-                "lambda:GetFunctionEventInvokeConfig",
-                "lambda:DeleteAlias",
-                "lambda:DeleteFunctionConcurrency",
-                "lambda:GetCodeSigningConfig",
-                "lambda:DeleteFunctionUrlConfig",
-                "lambda:RemovePermission",
-                "lambda:GetPolicy"
+                "lambda:*"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      Groups:
+        - !Ref ApplicationPermissionCIGroups
+
+  ECRFullAccessCustomPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "ECR full access custom policy"
+      PolicyDocument:
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ecr:*"
               ],
               "Resource": "*"
             }
