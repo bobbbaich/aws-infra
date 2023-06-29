@@ -1,3 +1,4 @@
+#file: noinspection YAMLSchemaValidation
 AWSTemplateFormatVersion: '2010-09-09'
 Description: This template deploys Event Bridge resources
 
@@ -13,18 +14,20 @@ Resources:
       RegistryName: !Sub ${EnvironmentName}-schema-registry
       Description: !Sub ${EnvironmentName} schema registry
 
-  RewardsSchema:
+  MySchema:
     Type: AWS::EventSchemas::Schema
     Properties:
       RegistryName: !Ref SchemaRegistry
       Type: OpenApi3
-      Description: Rewards Events Schema
+      Description: My Event Schema
       Content: |
         {
           "openapi": "3.0.0",
           "info": {
-            "title": "MyEvent",
+            "title": "Rewards Schema",
             "version": "1.0"
+          },
+          "paths": {
           },
           "components": {
             "schemas": {
@@ -38,7 +41,10 @@ Resources:
                     "type": "string"
                   }
                 },
-                "required": ["uuid", "name"]
+                "required": [
+                  "uuid",
+                  "name"
+                ]
               }
             }
           }
