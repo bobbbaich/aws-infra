@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This template deploys AWS SSl/TLS Certificates
+Description: This template deploys Event Bridge resources
 
 Parameters:
   EnvironmentName:
@@ -7,7 +7,7 @@ Parameters:
 
 Resources:
 
-  MySchemaRegistry:
+  SchemaRegistry:
     Type: AWS::EventSchemas::Registry
     Properties:
       RegistryName: !Sub ${EnvironmentName}-schema-registry
