@@ -14,7 +14,7 @@ Resources:
 
 Outputs:
   EventBus:
-    Description: !Sub ARN of ${EnvironmentName} event bus
+    Description: !Sub ARN of event bus
     Value: !Ref EventBus
     Export:
       Name: !Sub ${EnvironmentName}:EventBus
