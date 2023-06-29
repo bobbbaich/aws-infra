@@ -12,59 +12,9 @@ Resources:
     Properties:
       Name: !Sub ${EnvironmentName}-event-bus
 
-  RewardRule:
-    Type: AWS::Events::Rule
-    Properties:
-      Name: !Sub ${EnvironmentName}-reward-rule
-      Description: Reward rule
-      EventBusName: !Ref EventBus
-      EventPattern:
-        source:
-          - reward-service
-        detail-type:
-          - reward.lifecycle
-        detail:
-          schema:
-            - !Ref RewardSchema
-
-  SchemaRegistry:
-    Type: AWS::EventSchemas::Registry
-    Properties:
-      RegistryName: !Sub ${EnvironmentName}-schema-registry
-      Description: !Sub ${EnvironmentName} schema registry
-
-  RewardSchema:
-    Type: AWS::EventSchemas::Schema
-    Properties:
-      RegistryName: !Ref SchemaRegistry
-      Type: OpenApi3
-      Description: Reward schema
-      Content: |
-        {
-          "openapi": "3.0.0",
-          "info": {
-            "title": "Reward Schema",
-            "version": "1.0"
-          },
-          "paths": {
-          },
-          "components": {
-            "schemas": {
-              "Reward": {
-                "type": "object",
-                "properties": {
-                  "uuid": {
-                    "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "uuid",
-                  "name"
-                ]
-              }
-            }
-          }
-        }
+Outputs:
+  EventBus:
+    Description: !Sub ARN of ${EnvironmentName} event bus
+    Value: !Ref EventBus
+    Export:
+      Name: !Sub ${EnvironmentName}:EventBus
