@@ -3,7 +3,7 @@ name: Deploy Infrastructure
 on:
   push:
     branches:
-      - event-bridge
+      - master
 
 env:
   ENVIRONMENT: development
