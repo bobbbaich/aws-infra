@@ -38,6 +38,8 @@ Resources:
       AllocatedStorage: 20
       MasterUsername: !Join [ '', [ '{{resolve:secretsmanager:', !Ref RDSSecrets, ':SecretString:username}}' ] ]
       MasterUserPassword: !Join [ '', [ '{{resolve:secretsmanager:', !Ref RDSSecrets, ':SecretString:password}}' ] ]
+      MasterUserSecret:
+        SecretArn: !Ref RDSSecrets
       DBSubnetGroupName: !Ref DBVpcSubnetGroup
       VPCSecurityGroups:
         - !GetAtt DatabaseSG.GroupId

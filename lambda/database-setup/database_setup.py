@@ -12,6 +12,7 @@ logger.setLevel(logging.INFO)
 def lambda_handler(event, context):
     print(f'start service DB setup event=""{event}""')
     # rds env settings
+    db_name = os.environ['DBName']
     db_host = os.environ['DBHost']
     db_port = os.environ['DBPort']
     db_username = os.environ['DBUsername']
@@ -24,7 +25,7 @@ def lambda_handler(event, context):
         cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, event['LogicalResourceId'])
         return success_response(service_db_name)
 
-    conn = psycopg2.connect(host=db_host, port=db_port, dbname='postgres', user=db_username, password=db_password)
+    conn = psycopg2.connect(host=db_host, port=db_port, dbname=db_name, user=db_username, password=db_password)
     conn.set_session(autocommit=True)
 
     try:
