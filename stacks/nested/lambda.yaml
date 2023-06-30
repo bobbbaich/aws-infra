@@ -5,6 +5,8 @@ Description: This template deploys AWS Lambda functions
 Parameters:
   EnvironmentName:
     Type: String
+  DBName:
+    Type: String
   DBHost:
     Type: String
   DBPort:
@@ -34,6 +36,7 @@ Resources:
       Environment:
         Variables:
           Environment: !Ref EnvironmentName
+          DBName: !Ref DBName
           DBHost: !Ref DBHost
           DBPort: !Ref DBPort
           DBUsername: !Join [ '', [ '{{resolve:secretsmanager:', !Ref RDSSecretsArn, ':SecretString:username}}' ] ]

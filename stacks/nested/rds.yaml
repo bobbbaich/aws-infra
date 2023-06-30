@@ -4,6 +4,8 @@ Description: This template deploys Postgres DB
 Parameters:
   EnvironmentName:
     Type: String
+  DBName:
+    Type: String
   VpcId:
     Type: AWS::EC2::VPC::Id
   VpcPrivateSubnetIds:
@@ -28,7 +30,7 @@ Resources:
   DBInstance:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBName: !Sub ${EnvironmentName}PocDatabase
+      DBName: !Ref DBName
       Engine: postgres
       EngineVersion: 15.3
       MultiAZ: false
@@ -66,6 +68,11 @@ Outputs:
     Value: !Ref DBInstance
     Export:
       Name: !Sub ${EnvironmentName}:DBInstance
+  DBName:
+    Description: The DB instance host
+    Value: !Ref DBName
+    Export:
+      Name: !Sub ${EnvironmentName}:DBName
   DBInstanceHost:
     Description: The DB instance host
     Value: !GetAtt DBInstance.Endpoint.Address
