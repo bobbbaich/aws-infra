@@ -32,7 +32,7 @@ Resources:
     Properties:
       DBName: !Ref DBName
       Engine: postgres
-      EngineVersion: 14.2
+      EngineVersion: 14.7
       MultiAZ: false
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 20
