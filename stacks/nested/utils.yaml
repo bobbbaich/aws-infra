@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This template deploys Cloud Map service discovery
-# https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-ecs-service-discovery/
+Description: This template deploys AWS Utility resources
 
 Parameters:
   EnvironmentName:
@@ -17,6 +16,15 @@ Resources:
     Properties:
       GroupDescription: Security group for the EC2 instance
       VpcId: !Ref VpcId
+
+  EC2UtilInstanceIngressRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      FromPort: 22
+      ToPort: 22
+      GroupId: !Ref EC2UtilInstanceSG
+      CidrIp: 0.0.0.0/0
 
   EC2UtilInstance:
     Type: AWS::EC2::Instance
