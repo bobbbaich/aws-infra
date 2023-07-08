@@ -26,6 +26,27 @@ Resources:
       GroupId: !Ref EC2UtilInstanceSG
       CidrIp: 0.0.0.0/0
 
+  EC2UtilInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref EC2UtilRole
+
+  EC2UtilRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: EC2UtilRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonSQSFullAccess'
+
   EC2UtilInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -34,3 +55,4 @@ Resources:
       SubnetId: !Ref PublicSubnetId
       SecurityGroupIds:
         - !Ref EC2UtilInstanceSG
+      IamInstanceProfile: !Ref EC2UtilInstanceProfile
