@@ -25,6 +25,21 @@ Resources:
       TemplateURL: ../stacks/nested/vpc.yaml
       TimeoutInMinutes: !Ref StackTimeout
 
+  Utils:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - VPC
+    Properties:
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VpcId: !GetAtt [ VPC, Outputs.VpcId ]
+        PublicSubnetId: !GetAtt [ VPC, Outputs.PublicSubnet1 ]
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+      TemplateURL: ../stacks/nested/utils.yaml
+      TimeoutInMinutes: !Ref StackTimeout
+
   ECSRoles:
     Type: AWS::CloudFormation::Stack
     Properties:

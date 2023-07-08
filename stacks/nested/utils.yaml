@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template deploys Cloud Map service discovery
+# https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-ecs-service-discovery/
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  PublicSubnetId:
+    Type: AWS::EC2::Subnet::Id
+
+Resources:
+
+  EC2UtilInstanceSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for the EC2 instance
+      VpcId: !Ref VpcId
+
+  EC2UtilInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-02f265e7542630821
+      InstanceType: t2.micro
+      SubnetId: !Ref PublicSubnetId
+      SecurityGroupIds:
+        - !Ref EC2UtilInstanceSG
