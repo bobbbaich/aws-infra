@@ -17,11 +17,11 @@ Resources:
     Properties:
       CrossAccount: true
       Description: !Sub ${EnvironmentName}-event-bus schema discoverer
-      SourceArn: !Ref EventBus
+      SourceArn: !GetAtt EventBus.Arn
 
 Outputs:
   EventBus:
-    Description: ARN of event bus
+    Description: Name of event bus
     Value: !Ref EventBus
     Export:
       Name: !Sub ${EnvironmentName}:EventBus
