@@ -12,6 +12,13 @@ Resources:
     Properties:
       Name: !Sub ${EnvironmentName}-event-bus
 
+  EventSchemasDiscoverer:
+    Type: AWS::EventSchemas::Discoverer
+    Properties:
+      CrossAccount: true
+      Description: !Sub ${EnvironmentName}-event-bus schema discoverer
+      SourceArn: !Ref EventBus
+
 Outputs:
   EventBus:
     Description: ARN of event bus
