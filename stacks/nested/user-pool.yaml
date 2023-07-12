@@ -55,6 +55,27 @@ Resources:
         - Domain: !Select [ 0, !Split [ ".", !Ref AppDomainName ] ]
           Environment: !Ref EnvironmentName
 
+  CognitoApplicationDomainNameParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/${EnvironmentName}/CognitoApplicationDomainName"
+      Type: String
+      Value: !Ref UserPoolDomain
+
+  CognitoUserPoolIdParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/${EnvironmentName}/CognitoUserPoolId"
+      Type: String
+      Value: !Ref UserPool
+
+  CognitoClientIdParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/${EnvironmentName}/CognitoClientId"
+      Type: String
+      Value: !Ref UserPoolClient
+
 Outputs:
   CognitoApplicationDomainName:
     Value: !Ref UserPoolDomain
